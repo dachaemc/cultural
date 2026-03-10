@@ -20,6 +20,8 @@
             <li><a href="#activities">กิจกรรม</a></li>
             <li><a href="#committee">กรรมการ</a></li>
             <li><a href="#register">สมัครสมาชิก</a></li>
+            <li><a href="admin.html" style="color: white; font-weight: bold;"><i class="fa-solid fa-user-shield"></i>
+                    ผู้ดูแลระบบ</a></li>
         </ul>
     </nav>
 
@@ -140,35 +142,9 @@
         // Fetch Data
         async function loadData() {
             try {
-                // Load Activities
-                const actRes = await fetch('data/activities.json');
-                const activities = await actRes.json();
+                // โหลดกิจกรรมจาก Firebase (ย้ายไปไว้ใน <script type="module"> แทน)
+                // ส่วนนี้จะโหลดแค่คณะกรรมการ
 
-                const actContainer = document.getElementById('activities-container');
-                actContainer.innerHTML = '';
-
-                activities.forEach(act => {
-                    const card = document.createElement('div');
-                    card.className = 'activity-card';
-                    card.style.display = 'flex';
-                    card.style.flexDirection = 'column';
-
-                    const imgUrl = formatImageUrl(act.image);
-                    const formattedDate = formatDate(act.date);
-
-                    card.innerHTML = `
-                        <a href="activity_details.html?id=${act.id}" style="overflow: hidden; display: block;">
-                            <img src="${imgUrl}" alt="${act.title}" class="activity-img">
-                        </a>
-                        <div class="activity-content" style="flex: 1; display: flex; flex-direction: column;">
-                            <span class="activity-date"><i class="fa-regular fa-calendar"></i> ${formattedDate}</span>
-                            <h3 class="activity-title" style="margin-bottom: 15px;"><a href="activity_details.html?id=${act.id}" style="color: inherit; text-decoration: none;">${act.title}</a></h3>
-                            <p class="activity-desc" style="margin-bottom: 20px; flex: 1;">${act.description}</p>
-                            <a href="activity_details.html?id=${act.id}" class="btn-primary" style="padding: 8px 20px; font-size: 0.95rem; align-self: flex-start; margin-top: auto;">อ่านเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></a>
-                        </div>
-                    `;
-                    actContainer.appendChild(card);
-                });
 
                 // Load Committee
                 const comRes = await fetch('data/committee.json');
@@ -203,7 +179,7 @@
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // TODO: นำค่า Configuration ของ Firebase Project ของคุณมาใส่ที่นี่
         const firebaseConfig = {
@@ -219,6 +195,51 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // Load Activities from Firestore
+        async function loadActivities() {
+            try {
+                const actContainer = document.getElementById('activities-container');
+                const q = query(collection(db, "activities"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                actContainer.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    actContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีกิจกรรมในขณะนี้</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const act = { id: doc.id, ...doc.data() };
+                    const card = document.createElement('div');
+                    card.className = 'activity-card';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+
+                    const imgUrl = formatImageUrl(act.image);
+                    const formattedDate = formatDate(act.date);
+
+                    card.innerHTML = `
+                        <a href="activity_details.html?id=${act.id}" style="overflow: hidden; display: block;">
+                            <img src="${imgUrl}" alt="${act.title}" class="activity-img">
+                        </a>
+                        <div class="activity-content" style="flex: 1; display: flex; flex-direction: column;">
+                            <span class="activity-date"><i class="fa-regular fa-calendar"></i> ${formattedDate}</span>
+                            <h3 class="activity-title" style="margin-bottom: 15px;"><a href="activity_details.html?id=${act.id}" style="color: inherit; text-decoration: none;">${act.title}</a></h3>
+                            <p class="activity-desc" style="margin-bottom: 20px; flex: 1;">${act.description}</p>
+                            <a href="activity_details.html?id=${act.id}" class="btn-primary" style="padding: 8px 20px; font-size: 0.95rem; align-self: flex-start; margin-top: auto;">อ่านเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    `;
+                    actContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading activities from Firebase:', error);
+                document.getElementById('activities-container').innerHTML = '<p style="text-align:center; width:100%; color:red;">ไม่สามารถโหลดกิจกรรมได้</p>';
+            }
+        }
+
+        loadActivities();
 
         // Form Submit to Firebase
         document.getElementById('register-form').addEventListener('submit', async function (e) {
