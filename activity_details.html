@@ -144,11 +144,27 @@
         <p>&copy; <span id="current-year"></span> ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล และลานพหุวัฒนธรรม โรงเรียนสุรวิทยาคาร</p>
     </footer>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
+            authDomain: "cultural-plaza.firebaseapp.com",
+            projectId: "cultural-plaza",
+            storageBucket: "cultural-plaza.firebasestorage.app",
+            messagingSenderId: "327844017948",
+            appId: "1:327844017948:web:605158835ff985ffdbecd9",
+            measurementId: "G-BM3TTLGPEK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         // Helper Image URL Formatter
-        function formatImageUrl(url) {
+        window.formatImageUrl = function(url) {
             if (!url) return 'https://via.placeholder.com/600x400?text=No+Image';
             if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/d\/([a-zA-Z0-9_-]+)/);
@@ -159,30 +175,30 @@
             return url;
         }
 
-        function formatDate(dateString) {
+        window.formatDate = function(dateString) {
             if (!dateString) return '';
             const options = { day: '2-digit', month: 'short', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-GB', options);
+            return new Date(dateString).toLocaleDateString('th-TH', options);
         }
 
-        function openLightbox(src) {
+        window.openLightbox = function(src) {
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').classList.add('active');
         }
 
-        function closeLightbox() {
+        window.closeLightbox = function() {
             document.getElementById('lightbox').classList.remove('active');
         }
 
         document.getElementById('lightbox').addEventListener('click', function(e) {
             if (e.target === this) {
-                closeLightbox();
+                window.closeLightbox();
             }
         });
 
         // Get ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const id = parseInt(urlParams.get('id'));
+        const id = urlParams.get('id');
 
         async function loadActivity() {
             if (!id) {
@@ -191,40 +207,41 @@
             }
 
             try {
-                const res = await fetch('data/activities.json');
-                const activities = await res.json();
-                
-                const act = activities.find(a => a.id === id);
-                if (!act) {
+                const docRef = doc(db, "activities", id);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
                     window.location.href = 'index.html';
                     return;
                 }
 
+                const act = docSnap.data();
+
                 // Title
-                document.getElementById('activity-title').textContent = act.title;
+                document.getElementById('activity-title').textContent = act.title || '-';
                 document.title = `${act.title} | ชมรมรอยอาระยะ`;
                 
                 // Date
-                document.getElementById('activity-date').textContent = formatDate(act.date);
+                document.getElementById('activity-date').textContent = window.formatDate(act.date);
                 
                 // Cover Image
-                const coverImgUrl = formatImageUrl(act.image);
+                const coverImgUrl = window.formatImageUrl(act.image);
                 document.getElementById('details-header').style.backgroundImage = `linear-gradient(rgba(155, 17, 30, 0.9), rgba(102, 0, 0, 0.9)), url('${coverImgUrl}')`;
                 
                 // Content
                 const contentBody = act.content && act.content.trim() !== '' ? act.content : act.description;
-                document.getElementById('activity-content').textContent = contentBody;
+                document.getElementById('activity-content').textContent = contentBody || '-';
 
-                // Gallery
-                if (act.gallery && act.gallery.length > 0) {
+                // Gallery (ถ้ามี)
+                if (act.gallery && Array.isArray(act.gallery) && act.gallery.length > 0) {
                     document.getElementById('gallery-container').style.display = 'block';
                     const grid = document.getElementById('gallery-grid');
                     
                     act.gallery.forEach(imgUrl => {
-                        const formattedUrl = formatImageUrl(imgUrl);
+                        const formattedUrl = window.formatImageUrl(imgUrl);
                         const item = document.createElement('div');
                         item.className = 'gallery-item';
-                        item.onclick = () => openLightbox(formattedUrl);
+                        item.onclick = () => window.openLightbox(formattedUrl);
                         
                         const img = document.createElement('img');
                         img.src = formattedUrl;
