@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล | โรงเรียนสุรวิทยาคาร</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <i class="fa-solid fa-dragon"></i> ชมรมรอยอาระยะ
+        </a>
+        <ul class="nav-links">
+            <li><a href="#home">หน้าแรก</a></li>
+            <li><a href="#activities">กิจกรรม</a></li>
+            <li><a href="#committee">กรรมการ</a></li>
+            <li><a href="#register">สมัครสมาชิก</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <h1>ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล<br>และลานพหุวัฒนธรรม</h1>
+            <p>โรงเรียนสุรวิทยาคาร เพื่อสืบสานและเผยแพร่วัฒนธรรม ประเพณี และศิลปะอันงดงามของจีนให้คงอยู่</p>
+            <a href="#register" class="btn-primary">สมัครสมาชิกชมรม <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </header>
+
+    <!-- Activities Section -->
+    <section id="activities">
+        <h2 class="section-title">กิจกรรมและประชาสัมพันธ์</h2>
+        <div class="activities-grid" id="activities-container">
+            <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลกิจกรรม...</p>
+        </div>
+    </section>
+
+    <!-- Committee Section -->
+    <section id="committee" style="background:var(--card-bg);">
+        <h2 class="section-title">คณะกรรมการชมรม</h2>
+        <div class="committee-grid" id="committee-container">
+            <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลกรรมการ...</p>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="register-section">
+        <h2 class="section-title">สมัครสมาชิกชมรม</h2>
+        <div class="register-container">
+            <div id="alert-message" style="display: none;" class="alert"></div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="fullname">ชื่อ - นามสกุล</label>
+                    <input type="text" id="fullname" name="fullname" class="form-control" required
+                        placeholder="นาย / นางสาว...">
+                </div>
+
+                <div class="form-group">
+                    <label>เพศ</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="ชาย" required> ชาย
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="หญิง" required> หญิง
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade">ระดับชั้น</label>
+                    <select id="grade" name="grade" class="form-control" required>
+                        <option value="">-- เลือกระดับชั้น --</option>
+                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivation">เหตุผลที่อยากเข้าชมรม (สั้นๆ)</label>
+                    <textarea id="motivation" name="motivation" class="form-control" rows="3" required
+                        placeholder="เหตุผล..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">ยืนยันการสมัครสมาชิก</button>
+                <a href="members_list.html" class="members-list-btn">ดูรายชื่อสมาชิกทั้งหมด</a>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; <span id="current-year"></span> ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล และลานพหุวัฒนธรรม โรงเรียนสุรวิทยาคาร
+        </p>
+    </footer>
+
+    <!-- Main Logic -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Smooth Scrolling Nav
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Helper Image URL Formatter
+        function formatImageUrl(url) {
+            if (!url) return 'https://via.placeholder.com/600x400?text=No+Image';
+            if (url.includes('drive.google.com/file/d/')) {
+                const match = url.match(/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+            }
+            return url;
+        }
+
+        // Format Date (e.g., "15 Feb 2026")
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-GB', options);
+        }
+
+        // Fetch Data
+        async function loadData() {
+            try {
+                // Load Activities
+                const actRes = await fetch('data/activities.json');
+                const activities = await actRes.json();
+
+                const actContainer = document.getElementById('activities-container');
+                actContainer.innerHTML = '';
+
+                activities.forEach(act => {
+                    const card = document.createElement('div');
+                    card.className = 'activity-card';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+
+                    const imgUrl = formatImageUrl(act.image);
+                    const formattedDate = formatDate(act.date);
+
+                    card.innerHTML = `
+                        <a href="activity_details.html?id=${act.id}" style="overflow: hidden; display: block;">
+                            <img src="${imgUrl}" alt="${act.title}" class="activity-img">
+                        </a>
+                        <div class="activity-content" style="flex: 1; display: flex; flex-direction: column;">
+                            <span class="activity-date"><i class="fa-regular fa-calendar"></i> ${formattedDate}</span>
+                            <h3 class="activity-title" style="margin-bottom: 15px;"><a href="activity_details.html?id=${act.id}" style="color: inherit; text-decoration: none;">${act.title}</a></h3>
+                            <p class="activity-desc" style="margin-bottom: 20px; flex: 1;">${act.description}</p>
+                            <a href="activity_details.html?id=${act.id}" class="btn-primary" style="padding: 8px 20px; font-size: 0.95rem; align-self: flex-start; margin-top: auto;">อ่านเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    `;
+                    actContainer.appendChild(card);
+                });
+
+                // Load Committee
+                const comRes = await fetch('data/committee.json');
+                const committee = await comRes.json();
+
+                const comContainer = document.getElementById('committee-container');
+                comContainer.innerHTML = '';
+
+                committee.forEach(member => {
+                    const imgUrl = formatImageUrl(member.image);
+                    const card = document.createElement('div');
+                    card.className = 'member-card';
+
+                    card.innerHTML = `
+                        <img src="${imgUrl}" alt="${member.name}" class="member-img">
+                        <h3 class="member-name">${member.name}</h3>
+                        <p class="member-position">${member.position}</p>
+                        <p class="member-grade"><i class="fa-solid fa-graduation-cap"></i> ${member.grade}</p>
+                    `;
+                    comContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Initialize
+        loadData();
+    </script>
+
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // TODO: นำค่า Configuration ของ Firebase Project ของคุณมาใส่ที่นี่
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
+            authDomain: "cultural-plaza.firebaseapp.com",
+            projectId: "cultural-plaza",
+            storageBucket: "cultural-plaza.firebasestorage.app",
+            messagingSenderId: "327844017948",
+            appId: "1:327844017948:web:605158835ff985ffdbecd9",
+            measurementId: "G-BM3TTLGPEK"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Form Submit to Firebase
+        document.getElementById('register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+            submitBtn.disabled = true;
+
+            const alertBox = document.getElementById('alert-message');
+            alertBox.style.display = 'none';
+
+            try {
+                const fullname = document.getElementById('fullname').value;
+                const gender = document.querySelector('input[name="gender"]:checked').value;
+                const grade = document.getElementById('grade').value;
+                const motivation = document.getElementById('motivation').value;
+
+                // บันทึกข้อมูลลง Firestore ใน collection ที่ชื่อว่า "members"
+                await addDoc(collection(db, "members"), {
+                    fullname: fullname,
+                    gender: gender,
+                    grade: grade,
+                    motivation: motivation,
+                    timestamp: serverTimestamp()
+                });
+
+                alertBox.style.display = 'block';
+                alertBox.className = 'alert alert-success';
+                alertBox.innerHTML = '<i class="fa-solid fa-check-circle"></i> สมัครสมาชิกสำเร็จ!';
+                this.reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alertBox.style.display = 'block';
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerHTML = '<i class="fa-solid fa-times-circle"></i> เกิดข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบการตั้งค่า Firebase หรือ Rules';
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+
+</html>
