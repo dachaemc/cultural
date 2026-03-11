@@ -871,10 +871,8 @@
                         image: imageUrl,
                         description: document.getElementById('act-desc').value,
                         content: document.getElementById('act-content').value,
+                        gallery: galleryUrls
                     };
-                    if(galleryUrls.length > 0) {
-                        updateData.gallery = galleryUrls;
-                    }
                     await updateDoc(actRef, updateData);
                     alert('แก้ไขกิจกรรมสำเร็จ!');
                 } else {
