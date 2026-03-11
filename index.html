@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล | โรงเรียนสุรวิทยาคาร</title>
+    <title>ชมรมรอยอดีต จารึกปัจจุบัน | โรงเรียนสุรวิทยาคาร</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -17,14 +17,16 @@
             top: 0;
             width: 100%;
             height: 100vh;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0, 0, 0, 0.8);
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
+
         #com-details-modal.active {
             display: flex;
         }
+
         .com-modal-content {
             background-color: var(--card-bg, #fff);
             border-radius: var(--radius-lg, 12px);
@@ -32,47 +34,61 @@
             max-width: 400px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: modalFadeIn 0.3s ease;
         }
+
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .com-modal-header {
             height: 120px;
             background: linear-gradient(135deg, var(--primary, #e74c3c), #c0392b);
             position: relative;
         }
+
         .com-modal-body {
             padding: 0 30px 40px;
             text-align: center;
             margin-top: -60px;
         }
+
         .com-modal-img {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             border: 4px solid #fff;
             object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
             background: #fff;
             position: relative;
             z-index: 2;
         }
+
         .com-modal-name {
             font-size: 1.5rem;
             color: #2c3e50;
             margin-bottom: 5px;
             font-weight: 700;
         }
+
         .com-modal-position {
             color: var(--primary, #e74c3c);
             font-weight: 600;
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
+
         .com-modal-grade {
             display: inline-block;
             background-color: #f1f5f9;
@@ -81,6 +97,7 @@
             font-size: 0.95rem;
             color: #64748b;
         }
+
         .com-modal-bio {
             margin-top: 20px;
             background-color: #f8fafc;
@@ -91,9 +108,12 @@
             color: #475569;
             line-height: 1.6;
             text-align: left;
-            display: none; /* Hidden by default until populated */
-            white-space: pre-wrap; /* เพื่อให้ขึ้นบรรทัดใหม่ตามที่พิมพ์ใน Textarea */
+            display: none;
+            /* Hidden by default until populated */
+            white-space: pre-wrap;
+            /* เพื่อให้ขึ้นบรรทัดใหม่ตามที่พิมพ์ใน Textarea */
         }
+
         .close-com-modal {
             position: absolute;
             top: 15px;
@@ -103,17 +123,20 @@
             cursor: pointer;
             z-index: 10;
         }
+
         .close-com-modal:hover {
             color: #f1c40f;
         }
+
         /* Make user know they can click card */
         .member-card {
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .member-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -122,7 +145,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#" class="nav-logo">
-            <i class="fa-solid fa-dragon"></i> ชมรมรอยอาระยะ
+            <i class="fa-solid fa-dragon"></i> ชมรมรอยอดีต จารึกปัจจุบัน
         </a>
         <ul class="nav-links">
             <li><a href="#home">หน้าแรก</a></li>
@@ -137,8 +160,8 @@
     <!-- Hero Section -->
     <header class="hero" id="home">
         <div class="hero-content">
-            <h1>ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล<br>และลานพหุวัฒนธรรม</h1>
-            <p>โรงเรียนสุรวิทยาคาร เพื่อสืบสานและเผยแพร่วัฒนธรรม ประเพณี และศิลปะอันงดงามของจีนให้คงอยู่</p>
+            <h1>ชมรมรอยอดีต<br>จารึกปัจจุบัน</h1>
+            <p>เพื่อสืบสานและเผยแพร่วัฒนธรรม ประเพณี และศิลปะอันงดงามให้คงอยู่</p>
             <a href="#register" class="btn-primary">สมัครสมาชิกชมรม <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </header>
@@ -154,13 +177,15 @@
     <!-- Committee Section -->
     <section id="committee" style="background:var(--card-bg);">
         <h2 class="section-title">ที่ปรึกษาและคณะกรรมการ</h2>
-        
-        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะที่ปรึกษาชมรม</h3>
+
+        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะที่ปรึกษาชมรม
+        </h3>
         <div class="committee-grid" id="advisor-container" style="margin-bottom: 60px;">
             <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลที่ปรึกษา...</p>
         </div>
 
-        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะกรรมการดำเนินงาน</h3>
+        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">
+            คณะกรรมการดำเนินงาน</h3>
         <div class="committee-grid" id="committee-container">
             <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลกรรมการ...</p>
         </div>
@@ -218,7 +243,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; <span id="current-year"></span> ชมรมรอยอาระยะ ลูกหลานจีนโพ้นทะเล และลานพหุวัฒนธรรม โรงเรียนสุรวิทยาคาร
+        <p>&copy; <span id="current-year"></span> ชมรมรอยอดีต จารึกปัจจุบัน โรงเรียนสุรวิทยาคาร
         </p>
     </footer>
 
@@ -232,7 +257,8 @@
                 <img src="" id="com-modal-img" class="com-modal-img">
                 <h2 class="com-modal-name" id="com-modal-name">-</h2>
                 <div class="com-modal-position" id="com-modal-position">-</div>
-                <div class="com-modal-grade"><i class="fa-solid fa-graduation-cap"></i> <span id="com-modal-grade">-</span></div>
+                <div class="com-modal-grade"><i class="fa-solid fa-graduation-cap"></i> <span
+                        id="com-modal-grade">-</span></div>
                 <div class="com-modal-bio" id="com-modal-bio"></div>
             </div>
         </div>
@@ -240,13 +266,13 @@
 
     <!-- Main Logic -->
     <script>
-        window.closeCommitteeDetailsModal = function() {
+        window.closeCommitteeDetailsModal = function () {
             document.getElementById('com-details-modal').classList.remove('active');
         };
-        
+
         // Close modal when click outside content
-        document.getElementById('com-details-modal').addEventListener('click', function(e) {
-            if(e.target === this) {
+        document.getElementById('com-details-modal').addEventListener('click', function (e) {
+            if (e.target === this) {
                 closeCommitteeDetailsModal();
             }
         });
@@ -266,11 +292,11 @@
         // Helper Image URL Formatter
         function formatImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/600x400?text=No+Image';
-            
+
             // กรณีเป็น Link จาก Google Picker หรือ Google Drive
             // รูปแบบที่ 1: https://drive.google.com/uc?export=view&id=...
             // รูปแบบที่ 2: https://drive.google.com/file/d/.../view
-            
+
             let fileId = null;
             if (url.includes('id=')) {
                 const match = url.match(/id=([^&]+)/);
@@ -284,7 +310,7 @@
                 // เปลี่ยนเป็นลิงก์ thumbnail แทนซึ่งจะแสดงผลข้ามเว็บได้เสถียรกว่า
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
             }
-            
+
             return url;
         }
 
@@ -407,7 +433,7 @@
                         document.getElementById('com-modal-name').textContent = member.name || '-';
                         document.getElementById('com-modal-position').textContent = member.position || '-';
                         document.getElementById('com-modal-grade').textContent = member.grade || '-';
-                        
+
                         const bioEl = document.getElementById('com-modal-bio');
                         if (member.bio && member.bio.trim() !== '') {
                             bioEl.textContent = member.bio;
@@ -415,7 +441,7 @@
                         } else {
                             bioEl.style.display = 'none';
                         }
-                        
+
                         document.getElementById('com-details-modal').classList.add('active');
                     };
 
@@ -426,7 +452,7 @@
                         <p class="member-grade"><i class="fa-solid fa-graduation-cap"></i> ${member.grade}</p>
                     `;
                     const memberType = member.type || (member.position && member.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน');
-                    
+
                     if (memberType === 'คณะที่ปรึกษาชมรม') {
                         advisorContainer.appendChild(card);
                         hasAdvisor = true;
@@ -497,3 +523,5 @@
         });
     </script>
 </body>
+
+</html>
