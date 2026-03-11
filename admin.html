@@ -697,14 +697,14 @@
                 
                 if (isMultipleSelection) {
                      // ถ้าเลือกหลายรูป (Gallery)
-                    let currentUrls = targetElement.value ? targetElement.value.split('\\n') : [];
+                    let currentUrls = targetElement.value ? targetElement.value.split('\n') : [];
                     data.docs.forEach(doc => {
                         const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
                         if (!currentUrls.includes(url)) {
                             currentUrls.push(url);
                         }
                     });
-                    targetElement.value = currentUrls.join('\\n');
+                    targetElement.value = currentUrls.join('\n');
                 } else {
                      // ถ้าเลือกรูปเดียว (Cover, Committee)
                     const doc = data.docs[0];
