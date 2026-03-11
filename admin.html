@@ -398,8 +398,14 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Link รูปภาพหน้าปก * (URL)</label>
-                    <input type="text" id="act-image" required class="form-control" placeholder="https://..." style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">อัพโหลดรูปภาพหน้าปก (ไฟล์)</label>
+                    <input type="file" id="act-image-file" accept="image/*" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <small style="color: #666;">(หากเลือกไฟล์ จะใช้ไฟล์แทน Link URL ด้านล่าง)</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Link รูปภาพหน้าปก (URL)</label>
+                    <input type="text" id="act-image" class="form-control" placeholder="https://..." style="width: 100%; padding: 10px; box-sizing: border-box;">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
@@ -410,6 +416,12 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">เนื้อหาแบบยาว (ถ้ามี)</label>
                     <textarea id="act-content" class="form-control" rows="4" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพเพิ่มเติม (อัพโหลดได้หลายรูปสำหรับ Gallery)</label>
+                    <input type="file" id="act-gallery-files" accept="image/*" multiple class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <small style="color: #666;">(สามารถเลือกได้หลายไฟล์พร้อมกัน กด Ctrl หรือ Shift ค้างไว้เพื่อเลือก)</small>
                 </div>
 
                 <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
@@ -423,6 +435,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
@@ -438,6 +451,7 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         // --- Helper Functions ---
         function formatDateTimeFromFirestore(timestamp) {
@@ -549,14 +563,50 @@
         document.getElementById('add-activity-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = this.querySelector('button[type="submit"]');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+
+            const fileInput = document.getElementById('act-image-file');
+            const urlInput = document.getElementById('act-image').value;
+
+            if (!fileInput.files[0] && !urlInput) {
+                alert('กรุณาอัพโหลดไฟล์รูปภาพ หรือใส่ Link URL รูปภาพ');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังเริ่มดำเนินการ...';
             btn.disabled = true;
 
             try {
+                let imageUrl = urlInput;
+
+                if (fileInput.files.length > 0) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพปก...';
+                    const file = fileInput.files[0];
+                    const storageRef = ref(storage, 'activities/cover_' + Date.now() + '_' + file.name);
+                    
+                    await uploadBytes(storageRef, file);
+                    imageUrl = await getDownloadURL(storageRef);
+                }
+
+                const galleryInput = document.getElementById('act-gallery-files');
+                const galleryUrls = [];
+                if (galleryInput && galleryInput.files.length > 0) {
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (0/${galleryInput.files.length})...`;
+                    for (let i = 0; i < galleryInput.files.length; i++) {
+                        const file = galleryInput.files[i];
+                        const storageRef = ref(storage, 'activities/gallery_' + Date.now() + '_' + file.name);
+                        await uploadBytes(storageRef, file);
+                        const downloadUrl = await getDownloadURL(storageRef);
+                        galleryUrls.push(downloadUrl);
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (${i + 1}/${galleryInput.files.length})...`;
+                    }
+                }
+
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
                 await addDoc(collection(db, "activities"), {
                     title: document.getElementById('act-title').value,
                     date: document.getElementById('act-date').value,
-                    image: document.getElementById('act-image').value,
+                    image: imageUrl,
+                    gallery: galleryUrls,
                     description: document.getElementById('act-desc').value,
                     content: document.getElementById('act-content').value,
                     timestamp: serverTimestamp()
@@ -566,7 +616,7 @@
                 window.loadActivitiesFromFirebase();
             } catch (err) {
                 console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม');
+                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม (หากเปลี่ยนรูปภาพ โปรดตรวจสอบว่า Firebase Storage ของคุณเปิดให้เข้าถึงได้แบบ Public หรือไม่)');
             } finally {
                 btn.innerHTML = 'บันทึกกิจกรรม';
                 btn.disabled = false;
