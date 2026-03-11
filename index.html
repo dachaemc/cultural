@@ -364,8 +364,14 @@
                     return;
                 }
 
+                let hasVisible = false;
                 querySnapshot.forEach((doc) => {
                     const act = { id: doc.id, ...doc.data() };
+                    
+                    // Skip hidden activities
+                    if (act.status === 'hide') return;
+                    hasVisible = true;
+
                     const card = document.createElement('div');
                     card.className = 'activity-card';
                     card.style.display = 'flex';
@@ -387,6 +393,10 @@
                     `;
                     actContainer.appendChild(card);
                 });
+
+                if (!hasVisible) {
+                    actContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีกิจกรรมในขณะนี้</p>';
+                }
             } catch (error) {
                 console.error('Error loading activities from Firebase:', error);
                 document.getElementById('activities-container').innerHTML = '<p style="text-align:center; width:100%; color:red;">ไม่สามารถโหลดกิจกรรมได้</p>';
