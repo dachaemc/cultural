@@ -547,6 +547,10 @@
                     <input type="text" id="com-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ลำดับการแสดงผล (ตัวเลข เช่น 1, 2, 3...)</label>
+                    <input type="number" id="com-order" class="form-control" value="99" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">ประวัติโดยย่อ / คำอธิบายเพิ่มเติม</label>
                     <textarea id="com-bio" class="form-control" rows="3" placeholder="ประวัติสั้นๆ หรือผลงานที่ผ่านมา..." style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
                 </div>
@@ -966,6 +970,7 @@
         window.openCommitteeModal = function() {
             window.currentEditCommitteeId = null;
             document.getElementById('add-committee-form').reset();
+            document.getElementById('com-order').value = 99;
             document.getElementById('committee-modal').classList.add('active');
             document.querySelector('#committee-modal-title').textContent = 'เพิ่มกรรมการใหม่';
         };
@@ -977,6 +982,7 @@
                 document.getElementById('com-name').value = com.name || '';
                 document.getElementById('com-position').value = com.position || '';
                 document.getElementById('com-grade').value = com.grade || '';
+                document.getElementById('com-order').value = com.order !== undefined ? com.order : 99;
                 document.getElementById('com-bio').value = com.bio || '';
                 document.getElementById('com-image').value = com.image || '';
                 document.getElementById('committee-modal').classList.add('active');
@@ -1000,11 +1006,14 @@
 
             try {
                 let imageUrl = urlInput;
+                let orderVal = parseInt(document.getElementById('com-order').value);
+                if (isNaN(orderVal)) orderVal = 99;
 
                 const comData = {
                     name: document.getElementById('com-name').value,
                     position: document.getElementById('com-position').value,
                     grade: document.getElementById('com-grade').value,
+                    order: orderVal,
                     bio: document.getElementById('com-bio').value,
                     image: imageUrl
                 };
@@ -1057,6 +1066,13 @@
                     committeeList.push({ id: doc.id, ...doc.data() });
                 });
                 
+                // Sort array by order field
+                committeeList.sort((a, b) => {
+                    const orderA = a.order !== undefined ? a.order : 99;
+                    const orderB = b.order !== undefined ? b.order : 99;
+                    return orderA - orderB;
+                });
+                
                 document.getElementById('total-committee').textContent = committeeList.length;
                 tbody.innerHTML = '';
                 
@@ -1068,9 +1084,10 @@
                 committeeList.forEach((com, index) => {
                     const row = document.createElement('tr');
                     const imgUrl = formatImageUrl(com.image);
+                    const comOrderDisplay = com.order !== undefined ? com.order : 99;
                     
                     row.innerHTML = `
-                        <td>${index + 1}</td>
+                        <td>${comOrderDisplay}</td>
                         <td><img src="${imgUrl}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"></td>
                         <td>${com.name || '-'}</td>
                         <td>${com.position || '-'}</td>
