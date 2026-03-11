@@ -123,12 +123,25 @@
         // Helper Image URL Formatter
         function formatImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/600x400?text=No+Image';
-            if (url.includes('drive.google.com/file/d/')) {
+            
+            // กรณีเป็น Link จาก Google Picker หรือ Google Drive
+            // รูปแบบที่ 1: https://drive.google.com/uc?export=view&id=...
+            // รูปแบบที่ 2: https://drive.google.com/file/d/.../view
+            
+            let fileId = null;
+            if (url.includes('id=')) {
+                const match = url.match(/id=([^&]+)/);
+                if (match && match[1]) fileId = match[1];
+            } else if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-                }
+                if (match && match[1]) fileId = match[1];
             }
+
+            if (fileId) {
+                // เปลี่ยนเป็นลิงก์ thumbnail แทนซึ่งจะแสดงผลข้ามเว็บได้เสถียรกว่า
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+            }
+            
             return url;
         }
 
