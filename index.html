@@ -81,6 +81,18 @@
             font-size: 0.95rem;
             color: #64748b;
         }
+        .com-modal-bio {
+            margin-top: 20px;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary, #e74c3c);
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.6;
+            text-align: left;
+            display: none; /* Hidden by default until populated */
+        }
         .close-com-modal {
             position: absolute;
             top: 15px;
@@ -213,6 +225,7 @@
                 <h2 class="com-modal-name" id="com-modal-name">-</h2>
                 <div class="com-modal-position" id="com-modal-position">-</div>
                 <div class="com-modal-grade"><i class="fa-solid fa-graduation-cap"></i> <span id="com-modal-grade">-</span></div>
+                <div class="com-modal-bio" id="com-modal-bio"></div>
             </div>
         </div>
     </div>
@@ -370,6 +383,15 @@
                         document.getElementById('com-modal-name').textContent = member.name || '-';
                         document.getElementById('com-modal-position').textContent = member.position || '-';
                         document.getElementById('com-modal-grade').textContent = member.grade || '-';
+                        
+                        const bioEl = document.getElementById('com-modal-bio');
+                        if (member.bio && member.bio.trim() !== '') {
+                            bioEl.textContent = member.bio;
+                            bioEl.style.display = 'block';
+                        } else {
+                            bioEl.style.display = 'none';
+                        }
+                        
                         document.getElementById('com-details-modal').classList.add('active');
                     };
 
