@@ -416,6 +416,7 @@
                                 <th>ลำดับ</th>
                                 <th>รูปภาพ</th>
                                 <th>ชื่อ - นามสกุล</th>
+                                <th>ประเภท</th>
                                 <th>ตำแหน่ง</th>
                                 <th>ระดับชั้น</th>
                                 <th>จัดการ</th>
@@ -423,7 +424,7 @@
                         </thead>
                         <tbody id="admin-committee-tbody">
                             <tr>
-                                <td colspan="6" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
+                                <td colspan="7" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -537,6 +538,13 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
                     <input type="text" id="com-name" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">หมวดหมู่ *</label>
+                    <select id="com-type" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        <option value="คณะกรรมการดำเนินงาน">คณะกรรมการดำเนินงาน</option>
+                        <option value="คณะที่ปรึกษาชมรม">คณะที่ปรึกษาชมรม</option>
+                    </select>
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">ตำแหน่ง *</label>
@@ -980,6 +988,7 @@
             if(com) {
                 window.currentEditCommitteeId = id;
                 document.getElementById('com-name').value = com.name || '';
+                document.getElementById('com-type').value = com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน');
                 document.getElementById('com-position').value = com.position || '';
                 document.getElementById('com-grade').value = com.grade || '';
                 document.getElementById('com-order').value = com.order !== undefined ? com.order : 99;
@@ -1011,6 +1020,7 @@
 
                 const comData = {
                     name: document.getElementById('com-name').value,
+                    type: document.getElementById('com-type').value,
                     position: document.getElementById('com-position').value,
                     grade: document.getElementById('com-grade').value,
                     order: orderVal,
@@ -1056,7 +1066,7 @@
         window.loadCommitteeFromFirebase = async function() {
             try {
                 const tbody = document.getElementById('admin-committee-tbody');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
                 
                 const q = query(collection(db, "committee"), orderBy("timestamp", "asc"));
                 const querySnapshot = await getDocs(q);
@@ -1077,7 +1087,7 @@
                 tbody.innerHTML = '';
                 
                 if (committeeList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกรรมการ</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกรรมการ</td></tr>';
                     return;
                 }
                 
@@ -1090,6 +1100,7 @@
                         <td>${comOrderDisplay}</td>
                         <td><img src="${imgUrl}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"></td>
                         <td>${com.name || '-'}</td>
+                        <td>${com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน')}</td>
                         <td>${com.position || '-'}</td>
                         <td>${com.grade || '-'}</td>
                         <td>
