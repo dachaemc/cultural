@@ -6,6 +6,8 @@
     <title>ระบบหลังบ้าน | ชมรมรอยอาระยะ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             background-color: #f4f6f9;
@@ -448,14 +450,13 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">อัพโหลดรูปภาพหน้าปก (ไฟล์)</label>
-                    <input type="file" id="act-image-file" accept="image/*" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                    <small style="color: #666;">(หากเลือกไฟล์ จะใช้ไฟล์แทน Link URL ด้านล่าง)</small>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Link รูปภาพหน้าปก (URL)</label>
-                    <input type="text" id="act-image" class="form-control" placeholder="https://..." style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพหน้าปก (จาก Google Drive)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="act-image" required class="form-control" placeholder="URL รูปภาพหน้าปก" style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
+                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('act-image')" style="white-space: nowrap;">
+                            <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
@@ -469,9 +470,16 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพเพิ่มเติม (อัพโหลดได้หลายรูปสำหรับ Gallery)</label>
-                    <input type="file" id="act-gallery-files" accept="image/*" multiple class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                    <small style="color: #666;">(สามารถเลือกได้หลายไฟล์พร้อมกัน กด Ctrl หรือ Shift ค้างไว้เพื่อเลือก)</small>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพเพิ่มเติม (Gallery)</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('act-gallery-urls', true)">
+                            <i class="fa-brands fa-google-drive"></i> เลือกหลายรูปจาก Drive
+                        </button>
+                        <button type="button" class="btn-sm btn-danger" onclick="document.getElementById('act-gallery-urls').value = ''">
+                            ล้างข้อมูล
+                        </button>
+                    </div>
+                    <textarea id="act-gallery-urls" class="form-control" rows="3" placeholder="URL รูปภาพเพิ่มเติม (ขึ้นบรรทัดใหม่สำหรับแต่ละรูป)" style="width: 100%; padding: 10px; box-sizing: border-box;" readonly></textarea>
                 </div>
 
                 <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
@@ -539,13 +547,13 @@
                     <input type="text" id="com-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">อัพโหลดรูปภาพ (ไฟล์)</label>
-                    <input type="file" id="com-image-file" accept="image/*" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                    <small style="color: #666;">(รองรับการอัพโหลดแทน URL)</small>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Link รูปภาพ (URL)</label>
-                    <input type="text" id="com-image" class="form-control" placeholder="https://..." style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพ (จาก Google Drive)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="com-image" class="form-control" placeholder="URL รูปภาพ" style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
+                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('com-image')">
+                            <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
                     บันทึกข้อมูล
@@ -558,7 +566,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
@@ -574,7 +581,6 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         // --- Helper Functions ---
         function formatDateTimeFromFirestore(timestamp) {
@@ -615,6 +621,86 @@
                 window.loadMembersFromFirebase();
             }
         };
+
+        // --- Google Drive Picker API ---
+        const developerKey = 'AIzaSyCx0IT1c6WBjkJuTPARB4bNaRacihWVWlQ';
+        const clientId = '327844017948-nvelbt6gk5a5eu53nmid3icrgoiqrbm0.apps.googleusercontent.com';
+        const appId = '327844017948';
+        const scope = ['https://www.googleapis.com/auth/drive.readonly'];
+        
+        let pickerApiLoaded = false;
+        let oauthToken;
+        let currentTargetInputId = '';
+        let isMultipleSelection = false;
+
+        function loadPicker() {
+            gapi.load('picker', {'callback': function() { pickerApiLoaded = true; }});
+        }
+        window.onload = loadPicker; // โหลดตัว Picker รอไว้เลยตั้งแต่เปิดหน้าเว็บ
+
+        window.openGooglePicker = function(targetInputId, multiple = false) {
+            currentTargetInputId = targetInputId;
+            isMultipleSelection = multiple;
+            
+            // ใช้ Google Services Identity (GSI) ในการขอสิทธิ์
+            const tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: clientId,
+                scope: scope.join(' '),
+                callback: (tokenResponse) => {
+                    if (tokenResponse && tokenResponse.access_token) {
+                        oauthToken = tokenResponse.access_token;
+                        createPicker();
+                    }
+                },
+            });
+            tokenClient.requestAccessToken();
+        };
+
+        function createPicker() {
+            if (pickerApiLoaded && oauthToken) {
+                // กรองให้เห็นเฉพาะรูปภาพ (Photos)
+                const view = new google.picker.View(google.picker.ViewId.DOCS);
+                view.setMimeTypes("image/png,image/jpeg,image/jpg");
+
+                const pickerBuilder = new google.picker.PickerBuilder()
+                    .addView(view)
+                    .setOAuthToken(oauthToken)
+                    .setDeveloperKey(developerKey)
+                    .setCallback(pickerCallback);
+
+                // หากระบุว่าสามารถเลือกไฟล์ได้หลายไฟล์
+                if (isMultipleSelection) {
+                    pickerBuilder.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
+                }
+
+                const picker = pickerBuilder.build();
+                picker.setVisible(true);
+            }
+        }
+
+        function pickerCallback(data) {
+            if (data.action == google.picker.Action.PICKED) {
+                const targetElement = document.getElementById(currentTargetInputId);
+                
+                if (isMultipleSelection) {
+                     // ถ้าเลือกหลายรูป (Gallery)
+                    let currentUrls = targetElement.value ? targetElement.value.split('\\n') : [];
+                    data.docs.forEach(doc => {
+                        const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
+                        if (!currentUrls.includes(url)) {
+                            currentUrls.push(url);
+                        }
+                    });
+                    targetElement.value = currentUrls.join('\\n');
+                } else {
+                     // ถ้าเลือกรูปเดียว (Cover, Committee)
+                    const doc = data.docs[0];
+                    const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
+                    targetElement.value = url;
+                }
+            }
+        }
+
 
         // --- MEMBERS MANAGEMENT ---
         let membersList = [];
@@ -738,6 +824,7 @@
                 document.getElementById('act-image').value = act.image || '';
                 document.getElementById('act-desc').value = act.description || '';
                 document.getElementById('act-content').value = act.content || '';
+                document.getElementById('act-gallery-urls').value = act.gallery ? act.gallery.join('\n') : '';
                 document.getElementById('activity-modal').classList.add('active');
                 document.querySelector('#activity-modal h2').textContent = 'แก้ไขกิจกรรม';
             }
@@ -752,42 +839,15 @@
             e.preventDefault();
             const btn = this.querySelector('button[type="submit"]');
 
-            const fileInput = document.getElementById('act-image-file');
             const urlInput = document.getElementById('act-image').value;
 
-            if (!fileInput.files[0] && !urlInput) {
-                alert('กรุณาอัพโหลดไฟล์รูปภาพ หรือใส่ Link URL รูปภาพ');
-                return;
-            }
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังเริ่มดำเนินการ...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
             btn.disabled = true;
 
             try {
                 let imageUrl = urlInput;
-
-                if (fileInput.files.length > 0) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพปก...';
-                    const file = fileInput.files[0];
-                    const storageRef = ref(storage, 'activities/cover_' + Date.now() + '_' + file.name);
-                    
-                    await uploadBytes(storageRef, file);
-                    imageUrl = await getDownloadURL(storageRef);
-                }
-
-                const galleryInput = document.getElementById('act-gallery-files');
-                const galleryUrls = [];
-                if (galleryInput && galleryInput.files.length > 0) {
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (0/${galleryInput.files.length})...`;
-                    for (let i = 0; i < galleryInput.files.length; i++) {
-                        const file = galleryInput.files[i];
-                        const storageRef = ref(storage, 'activities/gallery_' + Date.now() + '_' + file.name);
-                        await uploadBytes(storageRef, file);
-                        const downloadUrl = await getDownloadURL(storageRef);
-                        galleryUrls.push(downloadUrl);
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (${i + 1}/${galleryInput.files.length})...`;
-                    }
-                }
+                const galleryText = document.getElementById('act-gallery-urls').value;
+                const galleryUrls = galleryText ? galleryText.split('\n').map(u => u.trim()).filter(u => u !== '') : [];
 
                 if (window.currentEditActivityId) {
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดทข้อมูล...';
@@ -821,7 +881,7 @@
                 window.loadActivitiesFromFirebase();
             } catch (err) {
                 console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม (หากเปลี่ยนรูปภาพ โปรดตรวจสอบว่า Firebase Storage ของคุณเปิดให้เข้าถึงได้แบบ Public หรือไม่)');
+                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม');
             } finally {
                 btn.innerHTML = 'บันทึกกิจกรรม';
                 btn.disabled = false;
@@ -921,7 +981,6 @@
             e.preventDefault();
             const btn = this.querySelector('button[type="submit"]');
 
-            const fileInput = document.getElementById('com-image-file');
             const urlInput = document.getElementById('com-image').value;
 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
@@ -929,14 +988,6 @@
 
             try {
                 let imageUrl = urlInput;
-                if (fileInput.files.length > 0) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพ...';
-                    const file = fileInput.files[0];
-                    const storageRef = ref(storage, 'committee/' + Date.now() + '_' + file.name);
-                    
-                    await uploadBytes(storageRef, file);
-                    imageUrl = await getDownloadURL(storageRef);
-                }
 
                 const comData = {
                     name: document.getElementById('com-name').value,
