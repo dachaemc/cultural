@@ -547,6 +547,10 @@
                     <input type="text" id="com-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ประวัติโดยย่อ / คำอธิบายเพิ่มเติม</label>
+                    <textarea id="com-bio" class="form-control" rows="3" placeholder="ประวัติสั้นๆ หรือผลงานที่ผ่านมา..." style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพ (จาก Google Drive)</label>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="com-image" class="form-control" placeholder="URL รูปภาพ" style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
@@ -975,6 +979,7 @@
                 document.getElementById('com-name').value = com.name || '';
                 document.getElementById('com-position').value = com.position || '';
                 document.getElementById('com-grade').value = com.grade || '';
+                document.getElementById('com-bio').value = com.bio || '';
                 document.getElementById('com-image').value = com.image || '';
                 document.getElementById('committee-modal').classList.add('active');
                 document.querySelector('#committee-modal-title').textContent = 'แก้ไขข้อมูลกรรมการ';
@@ -1002,6 +1007,7 @@
                     name: document.getElementById('com-name').value,
                     position: document.getElementById('com-position').value,
                     grade: document.getElementById('com-grade').value,
+                    bio: document.getElementById('com-bio').value,
                     image: imageUrl
                 };
 
