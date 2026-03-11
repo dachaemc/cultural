@@ -694,3 +694,349 @@
                 }
                 
                 membersList.forEach((m, index) => {
+                    const row = document.createElement('tr');
+                    const dateTime = formatDateTimeFromFirestore(m.timestamp);
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${m.fullname || '-'}</td>
+                        <td>${m.gender || '-'}</td>
+                        <td>${m.grade || '-'}</td>
+                        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${m.motivation || ''}">${m.motivation || '-'}</div></td>
+                        <td>${dateTime}</td>
+                        <td>
+                            <button class="btn-sm btn-primary-sm" onclick="openEditMemberModal('${m.id}')" title="แก้ไขข้อมูล">
+                                <i class="fa-solid fa-pen"></i> แก้ไข
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="deleteMember('${m.id}')" title="ลบข้อมูล">
+                                <i class="fa-solid fa-trash"></i> ลบ
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error", error);
+            }
+        }
+
+
+        // --- ACTIVITIES MANAGEMENT ---
+        let activitiesList = [];
+        window.openActivityModal = function() {
+            window.currentEditActivityId = null;
+            document.getElementById('add-activity-form').reset();
+            document.getElementById('activity-modal').classList.add('active');
+            document.querySelector('#activity-modal h2').textContent = 'เพิ่มกิจกรรมใหม่';
+        };
+
+        window.openEditActivityModal = function(id) {
+            const act = activitiesList.find(a => a.id === id);
+            if(act) {
+                window.currentEditActivityId = id;
+                document.getElementById('act-title').value = act.title || '';
+                document.getElementById('act-date').value = act.date || '';
+                document.getElementById('act-image').value = act.image || '';
+                document.getElementById('act-desc').value = act.description || '';
+                document.getElementById('act-content').value = act.content || '';
+                document.getElementById('activity-modal').classList.add('active');
+                document.querySelector('#activity-modal h2').textContent = 'แก้ไขกิจกรรม';
+            }
+        };
+
+        window.closeActivityModal = function() {
+            document.getElementById('activity-modal').classList.remove('active');
+            window.currentEditActivityId = null;
+        };
+
+        document.getElementById('add-activity-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+
+            const fileInput = document.getElementById('act-image-file');
+            const urlInput = document.getElementById('act-image').value;
+
+            if (!fileInput.files[0] && !urlInput) {
+                alert('กรุณาอัพโหลดไฟล์รูปภาพ หรือใส่ Link URL รูปภาพ');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังเริ่มดำเนินการ...';
+            btn.disabled = true;
+
+            try {
+                let imageUrl = urlInput;
+
+                if (fileInput.files.length > 0) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพปก...';
+                    const file = fileInput.files[0];
+                    const storageRef = ref(storage, 'activities/cover_' + Date.now() + '_' + file.name);
+                    
+                    await uploadBytes(storageRef, file);
+                    imageUrl = await getDownloadURL(storageRef);
+                }
+
+                const galleryInput = document.getElementById('act-gallery-files');
+                const galleryUrls = [];
+                if (galleryInput && galleryInput.files.length > 0) {
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (0/${galleryInput.files.length})...`;
+                    for (let i = 0; i < galleryInput.files.length; i++) {
+                        const file = galleryInput.files[i];
+                        const storageRef = ref(storage, 'activities/gallery_' + Date.now() + '_' + file.name);
+                        await uploadBytes(storageRef, file);
+                        const downloadUrl = await getDownloadURL(storageRef);
+                        galleryUrls.push(downloadUrl);
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (${i + 1}/${galleryInput.files.length})...`;
+                    }
+                }
+
+                if (window.currentEditActivityId) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดทข้อมูล...';
+                    const actRef = doc(db, "activities", window.currentEditActivityId);
+                    const updateData = {
+                        title: document.getElementById('act-title').value,
+                        date: document.getElementById('act-date').value,
+                        image: imageUrl,
+                        description: document.getElementById('act-desc').value,
+                        content: document.getElementById('act-content').value,
+                    };
+                    if(galleryUrls.length > 0) {
+                        updateData.gallery = galleryUrls;
+                    }
+                    await updateDoc(actRef, updateData);
+                    alert('แก้ไขกิจกรรมสำเร็จ!');
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+                    await addDoc(collection(db, "activities"), {
+                        title: document.getElementById('act-title').value,
+                        date: document.getElementById('act-date').value,
+                        image: imageUrl,
+                        gallery: galleryUrls,
+                        description: document.getElementById('act-desc').value,
+                        content: document.getElementById('act-content').value,
+                        timestamp: serverTimestamp()
+                    });
+                    alert('เพิ่มกิจกรรมสำเร็จ!');
+                }
+                window.closeActivityModal();
+                window.loadActivitiesFromFirebase();
+            } catch (err) {
+                console.error("Error", err);
+                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม (หากเปลี่ยนรูปภาพ โปรดตรวจสอบว่า Firebase Storage ของคุณเปิดให้เข้าถึงได้แบบ Public หรือไม่)');
+            } finally {
+                btn.innerHTML = 'บันทึกกิจกรรม';
+                btn.disabled = false;
+            }
+        });
+
+        window.deleteActivity = async function(id) {
+            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?')) {
+                try {
+                    await deleteDoc(doc(db, "activities", id));
+                    alert('ลบข้อมูลสำเร็จ');
+                    window.loadActivitiesFromFirebase();
+                } catch(error) {
+                    console.error("Error", error);
+                    alert('เกิดข้อผิดพลาด');
+                }
+            }
+        };
+
+        window.loadActivitiesFromFirebase = async function() {
+            try {
+                const tbody = document.getElementById('admin-activities-tbody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+                
+                const q = query(collection(db, "activities"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                activitiesList = [];
+                querySnapshot.forEach((doc) => {
+                    activitiesList.push({ id: doc.id, ...doc.data() });
+                });
+                
+                document.getElementById('total-activities').textContent = activitiesList.length;
+                tbody.innerHTML = '';
+                
+                if (activitiesList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกิจกรรม</td></tr>';
+                    return;
+                }
+                
+                activitiesList.forEach((act, index) => {
+                    const row = document.createElement('tr');
+                    const imgUrl = formatImageUrl(act.image);
+                    const formattedDate = act.date ? new Date(act.date).toLocaleDateString('th-TH') : '-';
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><img src="${imgUrl}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                        <td>${act.title || '-'}</td>
+                        <td>${formattedDate}</td>
+                        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${act.description || '-'}</div></td>
+                        <td>
+                            <button class="btn-sm btn-primary-sm" onclick="openEditActivityModal('${act.id}')">
+                                <i class="fa-solid fa-pen"></i> แก้ไข
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="deleteActivity('${act.id}')">
+                                <i class="fa-solid fa-trash"></i> ลบ
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error", error);
+                document.getElementById('admin-activities-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+            }
+        };
+
+        // --- COMMITTEE MANAGEMENT ---
+        let committeeList = [];
+        window.openCommitteeModal = function() {
+            window.currentEditCommitteeId = null;
+            document.getElementById('add-committee-form').reset();
+            document.getElementById('committee-modal').classList.add('active');
+            document.querySelector('#committee-modal-title').textContent = 'เพิ่มกรรมการใหม่';
+        };
+
+        window.openEditCommitteeModal = function(id) {
+            const com = committeeList.find(c => c.id === id);
+            if(com) {
+                window.currentEditCommitteeId = id;
+                document.getElementById('com-name').value = com.name || '';
+                document.getElementById('com-position').value = com.position || '';
+                document.getElementById('com-grade').value = com.grade || '';
+                document.getElementById('com-image').value = com.image || '';
+                document.getElementById('committee-modal').classList.add('active');
+                document.querySelector('#committee-modal-title').textContent = 'แก้ไขข้อมูลกรรมการ';
+            }
+        };
+
+        window.closeCommitteeModal = function() {
+            document.getElementById('committee-modal').classList.remove('active');
+            window.currentEditCommitteeId = null;
+        };
+
+        document.getElementById('add-committee-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+
+            const fileInput = document.getElementById('com-image-file');
+            const urlInput = document.getElementById('com-image').value;
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            btn.disabled = true;
+
+            try {
+                let imageUrl = urlInput;
+                if (fileInput.files.length > 0) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพ...';
+                    const file = fileInput.files[0];
+                    const storageRef = ref(storage, 'committee/' + Date.now() + '_' + file.name);
+                    
+                    await uploadBytes(storageRef, file);
+                    imageUrl = await getDownloadURL(storageRef);
+                }
+
+                const comData = {
+                    name: document.getElementById('com-name').value,
+                    position: document.getElementById('com-position').value,
+                    grade: document.getElementById('com-grade').value,
+                    image: imageUrl
+                };
+
+                if (window.currentEditCommitteeId) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดท...';
+                    const comRef = doc(db, "committee", window.currentEditCommitteeId);
+                    await updateDoc(comRef, comData);
+                    alert('แก้ไขข้อมูลสำเร็จ!');
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+                    comData.timestamp = serverTimestamp();
+                    await addDoc(collection(db, "committee"), comData);
+                    alert('เพิ่มกรรมการสำเร็จ!');
+                }
+                window.closeCommitteeModal();
+                window.loadCommitteeFromFirebase();
+            } catch (err) {
+                console.error("Error", err);
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            } finally {
+                btn.innerHTML = 'บันทึกข้อมูล';
+                btn.disabled = false;
+            }
+        });
+
+        window.deleteCommittee = async function(id) {
+            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกรรมการนี้?')) {
+                try {
+                    await deleteDoc(doc(db, "committee", id));
+                    alert('ลบข้อมูลสำเร็จ');
+                    window.loadCommitteeFromFirebase();
+                } catch(error) {
+                    console.error("Error", error);
+                    alert('เกิดข้อผิดพลาด');
+                }
+            }
+        };
+
+        window.loadCommitteeFromFirebase = async function() {
+            try {
+                const tbody = document.getElementById('admin-committee-tbody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+                
+                const q = query(collection(db, "committee"), orderBy("timestamp", "asc"));
+                const querySnapshot = await getDocs(q);
+                
+                committeeList = [];
+                querySnapshot.forEach((doc) => {
+                    committeeList.push({ id: doc.id, ...doc.data() });
+                });
+                
+                document.getElementById('total-committee').textContent = committeeList.length;
+                tbody.innerHTML = '';
+                
+                if (committeeList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกรรมการ</td></tr>';
+                    return;
+                }
+                
+                committeeList.forEach((com, index) => {
+                    const row = document.createElement('tr');
+                    const imgUrl = formatImageUrl(com.image);
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><img src="${imgUrl}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"></td>
+                        <td>${com.name || '-'}</td>
+                        <td>${com.position || '-'}</td>
+                        <td>${com.grade || '-'}</td>
+                        <td>
+                            <button class="btn-sm btn-primary-sm" onclick="openEditCommitteeModal('${com.id}')">
+                                <i class="fa-solid fa-pen"></i> แก้ไข
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="deleteCommittee('${com.id}')">
+                                <i class="fa-solid fa-trash"></i> ลบ
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error", error);
+                document.getElementById('admin-committee-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+            }
+        };
+
+        // Initialize Data on load
+        window.loadMembersFromFirebase();
+        
+        // Show current date
+        const today = new Date();
+        document.getElementById('current-date').textContent = today.toLocaleDateString('th-TH', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+        });
+
+    </script>
+</body>
+</html>
