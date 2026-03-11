@@ -374,8 +374,18 @@
                     return;
                 }
 
+                let membersList = [];
                 querySnapshot.forEach((doc) => {
-                    const member = { id: doc.id, ...doc.data() };
+                    membersList.push({ id: doc.id, ...doc.data() });
+                });
+
+                membersList.sort((a, b) => {
+                    const orderA = a.order !== undefined ? a.order : 99;
+                    const orderB = b.order !== undefined ? b.order : 99;
+                    return orderA - orderB;
+                });
+
+                membersList.forEach((member) => {
                     const imgUrl = window.formatImageUrl ? window.formatImageUrl(member.image) : (typeof formatImageUrl !== 'undefined' ? formatImageUrl(member.image) : 'https://via.placeholder.com/600x400?text=No+Image');
                     const card = document.createElement('div');
                     card.className = 'member-card';
