@@ -666,7 +666,8 @@
                     .addView(view)
                     .setOAuthToken(oauthToken)
                     .setDeveloperKey(developerKey)
-                    .setCallback(pickerCallback);
+                    .setCallback(pickerCallback)
+                    .setOrigin(window.location.protocol + '//' + window.location.host); // เพิ่มบรรทัดนี้เพื่อแก้ไขปัญหา API Developer Key is invalid
 
                 // หากระบุว่าสามารถเลือกไฟล์ได้หลายไฟล์
                 if (isMultipleSelection) {
