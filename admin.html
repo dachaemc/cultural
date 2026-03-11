@@ -263,9 +263,90 @@
         .section-view.active {
             display: block;
         }
+
+        /* Login Screen Styles */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-card button:hover {
+            background: #c0392b;
+        }
+
+        #admin-panel-wrapper {
+            display: none;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-lock" style="font-size: 3rem; color: #e74c3c; margin-bottom: 20px;"></i>
+            <h2>เข้าสู่ระบบหลังบ้าน</h2>
+            <form id="login-form">
+                <input type="text" id="admin-username" placeholder="ชื่อผู้ใช้ (Username)" required autofocus style="margin-bottom: 10px;">
+                <input type="password" id="admin-password" placeholder="รหัสผ่าน (Password)" required>
+                <button type="submit">เข้าสู่ระบบ</button>
+            </form>
+            <p id="login-error" style="color: #e74c3c; margin-top: 15px; display: none;">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</p>
+            <a href="index.html" style="display: block; margin-top: 20px; color: #7f8c8d; text-decoration: none; font-size: 0.9rem;">
+                <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Panel Wrapper (Hidden until login) -->
+    <div id="admin-panel-wrapper" style="display: flex;">
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -276,7 +357,9 @@
             <li><a id="nav-members" class="active" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> <span>จัดการสมาชิก</span></a></li>
             <li><a id="nav-activities" onclick="switchTab('activities')"><i class="fa-solid fa-calendar-days"></i> <span>จัดการกิจกรรม</span></a></li>
             <li><a id="nav-committee" onclick="switchTab('committee')"><i class="fa-solid fa-user-tie"></i> <span>จัดการกรรมการ</span></a></li>
+            <li><a id="nav-admins" onclick="switchTab('admins')"><i class="fa-solid fa-user-shield"></i> <span>จัดการแอดมิน</span></a></li>
             <li><a href="index.html"><i class="fa-solid fa-home"></i> <span>กลับหน้าหลัก</span></a></li>
+            <li><a onclick="logout()" style="color: #e74c3c;"><i class="fa-solid fa-right-from-bracket"></i> <span>ออกจากระบบ</span></a></li>
         </ul>
     </div>
 
@@ -285,6 +368,7 @@
         <div class="topbar">
             <div>
                 <h2 id="page-title" style="margin: 0; font-size: 1.5rem; color: #2c3e50;">ระบบจัดการหลังบ้าน (Admin Panel)</h2>
+                <div id="welcome-msg" style="color: #666; font-size: 0.9rem; margin-top: 5px;"></div>
             </div>
             <div>
                 <span style="color: #7f8c8d;"><i class="fa-regular fa-calendar"></i> <span id="current-date"></span></span>
@@ -430,8 +514,52 @@
                     </table>
                 </div>
             </div>
-        </div>
+            <!-- Admin Management Section -->
+            <div id="section-admins" class="section-view">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-info">
+                            <h4>จำนวนแอดมินทั้งหมด</h4>
+                            <h2 id="total-admins">-</h2>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>รายชื่อผู้ดูแลระบบ (Admins)</h3>
+                        <div>
+                            <button class="btn-sm btn-success-sm" onclick="openAdminManageModal()">
+                                <i class="fa-solid fa-user-plus"></i> เพิ่มแอดมินใหม่
+                            </button>
+                            <button class="btn-sm btn-primary-sm" onclick="loadAdminsFromFirebase()">
+                                <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อแสดงผล</th>
+                                    <th>ชื่อผู้ใช้ (Username)</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-list-tbody">
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <!-- Modal: Add Activity -->
@@ -542,7 +670,7 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">หมวดหมู่ *</label>
                     <select id="com-type" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                        <option value="คณะกรรมการดำเนินงาน">คณะกรรมการดำเนินงาน</option>
+                        <option value="คณะกรรมการบริหาร">คณะกรรมการบริหาร</option>
                         <option value="คณะที่ปรึกษาชมรม">คณะที่ปรึกษาชมรม</option>
                     </select>
                 </div>
@@ -578,6 +706,31 @@
         </div>
     </div>
 
+    <!-- Modal: Add/Edit Admin -->
+    <div id="admin-manage-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAdminManageModal()">&times;</span>
+            <h2 id="admin-manage-modal-title" style="margin-top:0;">เพิ่มแอดมินใหม่</h2>
+            <form id="admin-manage-form">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อแอดมิน (สำหรับแสดงผล) *</label>
+                    <input type="text" id="admin-display-name" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อผู้ใช้ (Username) *</label>
+                    <input type="text" id="admin-user-id" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รหัสผ่าน *</label>
+                    <input type="password" id="admin-user-pwd" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                    บันทึกข้อมูลแอดมิน
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -597,6 +750,88 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // --- Multi-Admin Login Logic ---
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-username').value;
+            const pwd = document.getElementById('admin-password').value;
+            const errorMsg = document.getElementById('login-error');
+            const btn = this.querySelector('button');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
+            errorMsg.style.display = 'none';
+
+            try {
+                let querySnapshot;
+                try {
+                    const q = query(collection(db, "admins"));
+                    querySnapshot = await getDocs(q);
+                } catch (dbErr) {
+                    console.error("Firebase Login Error:", dbErr);
+                    // Emergency Fallback: If DB is blocked (likely rules) but credentials are swk/swk
+                    if (user === 'swk' && pwd === 'swk') {
+                        loginSuccess({ name: 'System Setup (Emergency)', user: 'swk' });
+                        return;
+                    }
+                    throw dbErr;
+                }
+                
+                // If no admins exist yet, allow initial setup
+                if (querySnapshot.empty && user === 'swk' && pwd === 'swk') {
+                    loginSuccess({ name: 'System Setup', user: 'swk' });
+                    return;
+                }
+
+                let found = false;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.username === user && data.password === pwd) {
+                        found = true;
+                        loginSuccess({ name: data.name, user: data.username });
+                    }
+                });
+
+                if (!found) {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                    document.getElementById('admin-password').value = '';
+                }
+            } catch (err) {
+                console.error("Connection Error Details:", err);
+                alert('ไม่สามารถเชื่อมต่อฐานข้อมูลได้: ' + (err.message || 'โปรดตรวจสอบสิทธิ์การเข้าถึง (Security Rules) ใน Firebase'));
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'เข้าสู่ระบบ';
+            }
+        });
+
+        function loginSuccess(admin) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('admin-panel-wrapper').style.display = 'flex';
+            document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${admin.name}`;
+            window.loadMembersFromFirebase();
+            sessionStorage.setItem('isAdminLoggedIn', 'true');
+            sessionStorage.setItem('adminName', admin.name);
+        }
+
+        // Check Session on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-panel-wrapper').style.display = 'flex';
+                document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${sessionStorage.getItem('adminName') || 'แอดมิน'}`;
+                window.loadMembersFromFirebase();
+            } else {
+                document.getElementById('admin-panel-wrapper').style.display = 'none';
+            }
+
+            // Current Date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('th-TH', options);
+        });
 
         // --- Helper Functions ---
         function formatDateTimeFromFirestore(timestamp) {
@@ -641,6 +876,8 @@
                 window.loadActivitiesFromFirebase();
             } else if(tabName === 'committee') {
                 window.loadCommitteeFromFirebase();
+            } else if(tabName === 'admins') {
+                window.loadAdminsFromFirebase();
             } else {
                 window.loadMembersFromFirebase();
             }
@@ -827,8 +1064,9 @@
                 });
             } catch (error) {
                 console.error("Error", error);
+                document.getElementById('admin-members-tbody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
             }
-        }
+        };
 
 
         // --- ACTIVITIES MANAGEMENT ---
@@ -988,7 +1226,7 @@
             if(com) {
                 window.currentEditCommitteeId = id;
                 document.getElementById('com-name').value = com.name || '';
-                document.getElementById('com-type').value = com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน');
+                document.getElementById('com-type').value = com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการบริหาร');
                 document.getElementById('com-position').value = com.position || '';
                 document.getElementById('com-grade').value = com.grade || '';
                 document.getElementById('com-order').value = com.order !== undefined ? com.order : 99;
@@ -1100,7 +1338,7 @@
                         <td>${comOrderDisplay}</td>
                         <td><img src="${imgUrl}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"></td>
                         <td>${com.name || '-'}</td>
-                        <td>${com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน')}</td>
+                        <td>${com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการบริหาร')}</td>
                         <td>${com.position || '-'}</td>
                         <td>${com.grade || '-'}</td>
                         <td>
@@ -1120,14 +1358,108 @@
             }
         };
 
-        // Initialize Data on load
-        window.loadMembersFromFirebase();
+        // Initialize Data on load (Disabled - now handled by logic below)
+        // window.loadMembersFromFirebase();
         
         // Show current date
-        const today = new Date();
-        document.getElementById('current-date').textContent = today.toLocaleDateString('th-TH', { 
+        const todayNow = new Date();
+        document.getElementById('current-date').textContent = todayNow.toLocaleDateString('th-TH', { 
             year: 'numeric', month: 'long', day: 'numeric' 
         });
+
+        // --- ADMINS MANAGEMENT ---
+        let adminsList = [];
+        window.openAdminManageModal = function() {
+            document.getElementById('admin-manage-form').reset();
+            document.getElementById('admin-manage-modal').classList.add('active');
+        };
+
+        window.closeAdminManageModal = function() {
+            document.getElementById('admin-manage-modal').classList.remove('active');
+        };
+
+        document.getElementById('admin-manage-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+
+            try {
+                const adminData = {
+                    name: document.getElementById('admin-display-name').value,
+                    username: document.getElementById('admin-user-id').value,
+                    password: document.getElementById('admin-user-pwd').value,
+                    timestamp: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "admins"), adminData);
+                alert('เพิ่มแอดมินสำเร็จ!');
+                window.closeAdminManageModal();
+                window.loadAdminsFromFirebase();
+            } catch (err) {
+                console.error(err);
+                alert('เกิดข้อผิดพลาด');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'บันทึกข้อมูลแอดมิน';
+            }
+        });
+
+        window.deleteAdmin = async function(id) {
+            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบแอดมินนี้?')) {
+                try {
+                    await deleteDoc(doc(db, "admins", id));
+                    alert('ลบสำเร็จ');
+                    window.loadAdminsFromFirebase();
+                } catch(err) {
+                    console.error(err);
+                    alert('เกิดข้อผิดพลาด');
+                }
+            }
+        };
+
+        window.loadAdminsFromFirebase = async function() {
+            try {
+                const tbody = document.getElementById('admin-list-tbody');
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด...</td></tr>';
+                
+                const querySnapshot = await getDocs(collection(db, "admins"));
+                adminsList = [];
+                querySnapshot.forEach((doc) => {
+                    adminsList.push({ id: doc.id, ...doc.data() });
+                });
+
+                document.getElementById('total-admins').textContent = adminsList.length;
+                tbody.innerHTML = '';
+
+                if (adminsList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลแอดมิน (กรุณาเพิ่มแอดมินคนแรก)</td></tr>';
+                    return;
+                }
+
+                adminsList.forEach(admin => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${admin.name}</td>
+                        <td>${admin.username}</td>
+                        <td>
+                            <button class="btn-sm btn-danger" onclick="deleteAdmin('${admin.id}')">
+                                <i class="fa-solid fa-trash"></i> ลบ
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        // Add Logout Function
+        window.logout = function() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            location.reload();
+        };
 
     </script>
 </body>
