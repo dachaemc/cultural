@@ -153,7 +153,14 @@
 
     <!-- Committee Section -->
     <section id="committee" style="background:var(--card-bg);">
-        <h2 class="section-title">คณะกรรมการชมรม</h2>
+        <h2 class="section-title">ที่ปรึกษาและคณะกรรมการ</h2>
+        
+        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะที่ปรึกษาชมรม</h3>
+        <div class="committee-grid" id="advisor-container" style="margin-bottom: 60px;">
+            <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลที่ปรึกษา...</p>
+        </div>
+
+        <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะกรรมการดำเนินงาน</h3>
         <div class="committee-grid" id="committee-container">
             <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลกรรมการ...</p>
         </div>
@@ -363,13 +370,16 @@
         // Load Committee from Firestore
         async function loadCommittee() {
             try {
+                const advisorContainer = document.getElementById('advisor-container');
                 const comContainer = document.getElementById('committee-container');
                 const q = query(collection(db, "committee"), orderBy("timestamp", "asc"));
                 const querySnapshot = await getDocs(q);
 
+                advisorContainer.innerHTML = '';
                 comContainer.innerHTML = '';
 
                 if (querySnapshot.empty) {
+                    advisorContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีรายชื่อที่ปรึกษา</p>';
                     comContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีรายชื่อกรรมการ</p>';
                     return;
                 }
@@ -384,6 +394,9 @@
                     const orderB = b.order !== undefined ? b.order : 99;
                     return orderA - orderB;
                 });
+
+                let hasAdvisor = false;
+                let hasCommittee = false;
 
                 membersList.forEach((member) => {
                     const imgUrl = window.formatImageUrl ? window.formatImageUrl(member.image) : (typeof formatImageUrl !== 'undefined' ? formatImageUrl(member.image) : 'https://via.placeholder.com/600x400?text=No+Image');
@@ -412,8 +425,23 @@
                         <p class="member-position">${member.position}</p>
                         <p class="member-grade"><i class="fa-solid fa-graduation-cap"></i> ${member.grade}</p>
                     `;
-                    comContainer.appendChild(card);
+                    const memberType = member.type || (member.position && member.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการดำเนินงาน');
+                    
+                    if (memberType === 'คณะที่ปรึกษาชมรม') {
+                        advisorContainer.appendChild(card);
+                        hasAdvisor = true;
+                    } else {
+                        comContainer.appendChild(card);
+                        hasCommittee = true;
+                    }
                 });
+
+                if (!hasAdvisor) {
+                    advisorContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีรายชื่อที่ปรึกษา</p>';
+                }
+                if (!hasCommittee) {
+                    comContainer.innerHTML = '<p style="text-align:center; width:100%; color:#666;">ยังไม่มีรายชื่อกรรมการ</p>';
+                }
             } catch (error) {
                 console.error('Error loading committee from Firebase:', error);
             }
@@ -469,5 +497,3 @@
         });
     </script>
 </body>
-
-</html>
