@@ -454,6 +454,7 @@
                                 <th>ชื่อกิจกรรม</th>
                                 <th>วันที่จัดกิจกรรม</th>
                                 <th>คำอธิบายแบบย่อ</th>
+                                <th>สถานะ</th>
                                 <th>จัดการ</th>
                             </tr>
                         </thead>
@@ -596,6 +597,14 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">เนื้อหาแบบยาว (ถ้ามี)</label>
                     <textarea id="act-content" class="form-control" rows="4" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">การแสดงผล *</label>
+                    <select id="act-status" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        <option value="show">แสดงหน้าเว็บ</option>
+                        <option value="hide">ซ่อนกิจกรรม</option>
+                    </select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
@@ -1088,6 +1097,7 @@
                 document.getElementById('act-desc').value = act.description || '';
                 document.getElementById('act-content').value = act.content || '';
                 document.getElementById('act-gallery-urls').value = act.gallery ? act.gallery.join('\n') : '';
+                document.getElementById('act-status').value = act.status || 'show';
                 document.getElementById('activity-modal').classList.add('active');
                 document.querySelector('#activity-modal h2').textContent = 'แก้ไขกิจกรรม';
             }
@@ -1121,7 +1131,8 @@
                         image: imageUrl,
                         description: document.getElementById('act-desc').value,
                         content: document.getElementById('act-content').value,
-                        gallery: galleryUrls
+                        gallery: galleryUrls,
+                        status: document.getElementById('act-status').value
                     };
                     await updateDoc(actRef, updateData);
                     alert('แก้ไขกิจกรรมสำเร็จ!');
@@ -1134,6 +1145,7 @@
                         gallery: galleryUrls,
                         description: document.getElementById('act-desc').value,
                         content: document.getElementById('act-content').value,
+                        status: document.getElementById('act-status').value,
                         timestamp: serverTimestamp()
                     });
                     alert('เพิ่มกิจกรรมสำเร็จ!');
@@ -1187,6 +1199,7 @@
                     const row = document.createElement('tr');
                     const imgUrl = formatImageUrl(act.image);
                     const formattedDate = act.date ? new Date(act.date).toLocaleDateString('th-TH') : '-';
+                    const statusText = act.status === 'hide' ? '<span style="color: #e74c3c;"><i class="fa-solid fa-eye-slash"></i> ซ่อนอยู่</span>' : '<span style="color: #2ecc71;"><i class="fa-solid fa-eye"></i> แสดงผล</span>';
                     
                     row.innerHTML = `
                         <td>${index + 1}</td>
@@ -1194,6 +1207,7 @@
                         <td>${act.title || '-'}</td>
                         <td>${formattedDate}</td>
                         <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${act.description || '-'}</div></td>
+                        <td>${statusText}</td>
                         <td>
                             <button class="btn-sm btn-primary-sm" onclick="openEditActivityModal('${act.id}')">
                                 <i class="fa-solid fa-pen"></i> แก้ไข
