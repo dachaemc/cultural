@@ -354,7 +354,7 @@
         async function loadActivities() {
             try {
                 const actContainer = document.getElementById('activities-container');
-                const q = query(collection(db, "activities"), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "activities"), orderBy("date", "desc"));
                 const querySnapshot = await getDocs(q);
 
                 actContainer.innerHTML = '';
