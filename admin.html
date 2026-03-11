@@ -1167,7 +1167,7 @@
                 const tbody = document.getElementById('admin-activities-tbody');
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
                 
-                const q = query(collection(db, "activities"), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "activities"), orderBy("date", "desc"));
                 const querySnapshot = await getDocs(q);
                 
                 activitiesList = [];
