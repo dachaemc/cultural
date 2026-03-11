@@ -273,6 +273,7 @@
         <ul class="sidebar-menu">
             <li><a id="nav-members" class="active" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> <span>จัดการสมาชิก</span></a></li>
             <li><a id="nav-activities" onclick="switchTab('activities')"><i class="fa-solid fa-calendar-days"></i> <span>จัดการกิจกรรม</span></a></li>
+            <li><a id="nav-committee" onclick="switchTab('committee')"><i class="fa-solid fa-user-tie"></i> <span>จัดการกรรมการ</span></a></li>
             <li><a href="index.html"><i class="fa-solid fa-home"></i> <span>กลับหน้าหลัก</span></a></li>
         </ul>
     </div>
@@ -379,6 +380,55 @@
                 </div>
             </div>
         </div>
+
+        <!-- Section: Committee -->
+        <div id="section-committee" class="section-view">
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-info">
+                        <h4>จำนวนกรรมการทั้งหมด</h4>
+                        <h2 id="total-committee">-</h2>
+                    </div>
+                    <div class="card-icon blue">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>รายชื่อคณะกรรมการชมรม</h3>
+                    <div>
+                        <button class="btn-sm btn-success-sm" onclick="openCommitteeModal()">
+                            <i class="fa-solid fa-plus"></i> เพิ่มกรรมการใหม่
+                        </button>
+                        <button class="btn-sm btn-primary-sm" onclick="loadCommitteeFromFirebase()">
+                            <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                        </button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>รูปภาพ</th>
+                                <th>ชื่อ - นามสกุล</th>
+                                <th>ตำแหน่ง</th>
+                                <th>ระดับชั้น</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-committee-tbody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal: Add Activity -->
@@ -431,10 +481,83 @@
         </div>
     </div>
 
+    <!-- Modal: Edit Member -->
+    <div id="member-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeMemberModal()">&times;</span>
+            <h2 style="margin-top:0;">แก้ไขข้อมูลสมาชิก</h2>
+            <form id="edit-member-form">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
+                    <input type="text" id="edit-member-fullname" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เพศ *</label>
+                    <select id="edit-member-gender" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
+                    <select id="edit-member-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เหตุผลที่อยากเข้าชมรม *</label>
+                    <textarea id="edit-member-motivation" required class="form-control" rows="3" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                </div>
+                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                    บันทึกการเปลี่ยนแปลง
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add/Edit Committee -->
+    <div id="committee-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCommitteeModal()">&times;</span>
+            <h2 id="committee-modal-title" style="margin-top:0;">เพิ่มกรรมการใหม่</h2>
+            <form id="add-committee-form">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
+                    <input type="text" id="com-name" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ตำแหน่ง *</label>
+                    <input type="text" id="com-position" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
+                    <input type="text" id="com-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">อัพโหลดรูปภาพ (ไฟล์)</label>
+                    <input type="file" id="com-image-file" accept="image/*" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    <small style="color: #666;">(รองรับการอัพโหลดแทน URL)</small>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Link รูปภาพ (URL)</label>
+                    <input type="text" id="com-image" class="form-control" placeholder="https://..." style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                    บันทึกข้อมูล
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -486,12 +609,56 @@
             
             if(tabName === 'activities') {
                 window.loadActivitiesFromFirebase();
+            } else if(tabName === 'committee') {
+                window.loadCommitteeFromFirebase();
             } else {
                 window.loadMembersFromFirebase();
             }
         };
 
         // --- MEMBERS MANAGEMENT ---
+        let membersList = [];
+        window.openEditMemberModal = function(id) {
+            const member = membersList.find(m => m.id === id);
+            if(member) {
+                window.currentEditMemberId = id;
+                document.getElementById('edit-member-fullname').value = member.fullname || '';
+                document.getElementById('edit-member-gender').value = member.gender || 'ชาย';
+                document.getElementById('edit-member-grade').value = member.grade || 'ม.1';
+                document.getElementById('edit-member-motivation').value = member.motivation || '';
+                document.getElementById('member-modal').classList.add('active');
+            }
+        };
+        window.closeMemberModal = function() {
+            document.getElementById('member-modal').classList.remove('active');
+            window.currentEditMemberId = null;
+        };
+
+        document.getElementById('edit-member-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            btn.disabled = true;
+            try {
+                const memberRef = doc(db, "members", window.currentEditMemberId);
+                await updateDoc(memberRef, {
+                    fullname: document.getElementById('edit-member-fullname').value,
+                    gender: document.getElementById('edit-member-gender').value,
+                    grade: document.getElementById('edit-member-grade').value,
+                    motivation: document.getElementById('edit-member-motivation').value
+                });
+                alert('แก้ไขข้อมูลสำเร็จ');
+                window.closeMemberModal();
+                window.loadMembersFromFirebase();
+            } catch (err) {
+                console.error("Error", err);
+                alert('เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
+            } finally {
+                btn.innerHTML = 'บันทึกการเปลี่ยนแปลง';
+                btn.disabled = false;
+            }
+        });
+
         window.deleteMember = async function(id) {
             if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกท่านนี้?')) {
                 try {
@@ -513,184 +680,17 @@
                 const q = query(collection(db, "members"), orderBy("timestamp", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                const members = [];
+                membersList = [];
                 querySnapshot.forEach((doc) => {
-                    members.push({ id: doc.id, ...doc.data() });
+                    membersList.push({ id: doc.id, ...doc.data() });
                 });
                 
-                document.getElementById('total-members').textContent = members.length;
+                document.getElementById('total-members').textContent = membersList.length;
                 tbody.innerHTML = '';
                 
-                if (members.length === 0) {
+                if (membersList.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีผู้ลงทะเบียน</td></tr>';
                     return;
                 }
                 
-                members.forEach((m, index) => {
-                    const row = document.createElement('tr');
-                    const dateTime = formatDateTimeFromFirestore(m.timestamp);
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${m.fullname || '-'}</td>
-                        <td>${m.gender || '-'}</td>
-                        <td>${m.grade || '-'}</td>
-                        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${m.motivation || ''}">${m.motivation || '-'}</div></td>
-                        <td>${dateTime}</td>
-                        <td>
-                            <button class="btn-sm btn-danger" onclick="deleteMember('${m.id}')" title="ลบข้อมูล">
-                                <i class="fa-solid fa-trash"></i> ลบ
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error", error);
-            }
-        }
-
-
-        // --- ACTIVITIES MANAGEMENT ---
-        window.openActivityModal = function() {
-            document.getElementById('add-activity-form').reset();
-            document.getElementById('activity-modal').classList.add('active');
-        };
-
-        window.closeActivityModal = function() {
-            document.getElementById('activity-modal').classList.remove('active');
-        };
-
-        document.getElementById('add-activity-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button[type="submit"]');
-
-            const fileInput = document.getElementById('act-image-file');
-            const urlInput = document.getElementById('act-image').value;
-
-            if (!fileInput.files[0] && !urlInput) {
-                alert('กรุณาอัพโหลดไฟล์รูปภาพ หรือใส่ Link URL รูปภาพ');
-                return;
-            }
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังเริ่มดำเนินการ...';
-            btn.disabled = true;
-
-            try {
-                let imageUrl = urlInput;
-
-                if (fileInput.files.length > 0) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพปก...';
-                    const file = fileInput.files[0];
-                    const storageRef = ref(storage, 'activities/cover_' + Date.now() + '_' + file.name);
-                    
-                    await uploadBytes(storageRef, file);
-                    imageUrl = await getDownloadURL(storageRef);
-                }
-
-                const galleryInput = document.getElementById('act-gallery-files');
-                const galleryUrls = [];
-                if (galleryInput && galleryInput.files.length > 0) {
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (0/${galleryInput.files.length})...`;
-                    for (let i = 0; i < galleryInput.files.length; i++) {
-                        const file = galleryInput.files[i];
-                        const storageRef = ref(storage, 'activities/gallery_' + Date.now() + '_' + file.name);
-                        await uploadBytes(storageRef, file);
-                        const downloadUrl = await getDownloadURL(storageRef);
-                        galleryUrls.push(downloadUrl);
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพโหลดรูปภาพเพิ่มเติม (${i + 1}/${galleryInput.files.length})...`;
-                    }
-                }
-
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
-                await addDoc(collection(db, "activities"), {
-                    title: document.getElementById('act-title').value,
-                    date: document.getElementById('act-date').value,
-                    image: imageUrl,
-                    gallery: galleryUrls,
-                    description: document.getElementById('act-desc').value,
-                    content: document.getElementById('act-content').value,
-                    timestamp: serverTimestamp()
-                });
-                alert('เพิ่มกิจกรรมสำเร็จ!');
-                window.closeActivityModal();
-                window.loadActivitiesFromFirebase();
-            } catch (err) {
-                console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม (หากเปลี่ยนรูปภาพ โปรดตรวจสอบว่า Firebase Storage ของคุณเปิดให้เข้าถึงได้แบบ Public หรือไม่)');
-            } finally {
-                btn.innerHTML = 'บันทึกกิจกรรม';
-                btn.disabled = false;
-            }
-        });
-
-        window.deleteActivity = async function(id) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?')) {
-                try {
-                    await deleteDoc(doc(db, "activities", id));
-                    alert('ลบข้อมูลสำเร็จ');
-                    window.loadActivitiesFromFirebase();
-                } catch(error) {
-                    console.error("Error", error);
-                    alert('เกิดข้อผิดพลาด');
-                }
-            }
-        };
-
-        window.loadActivitiesFromFirebase = async function() {
-            try {
-                const tbody = document.getElementById('admin-activities-tbody');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
-                
-                const q = query(collection(db, "activities"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                const activities = [];
-                querySnapshot.forEach((doc) => {
-                    activities.push({ id: doc.id, ...doc.data() });
-                });
-                
-                document.getElementById('total-activities').textContent = activities.length;
-                tbody.innerHTML = '';
-                
-                if (activities.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกิจกรรม</td></tr>';
-                    return;
-                }
-                
-                activities.forEach((act, index) => {
-                    const row = document.createElement('tr');
-                    const imgUrl = formatImageUrl(act.image);
-                    const formattedDate = act.date ? new Date(act.date).toLocaleDateString('th-TH') : '-';
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><img src="${imgUrl}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
-                        <td>${act.title || '-'}</td>
-                        <td>${formattedDate}</td>
-                        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${act.description || '-'}</div></td>
-                        <td>
-                            <button class="btn-sm btn-danger" onclick="deleteActivity('${act.id}')">
-                                <i class="fa-solid fa-trash"></i> ลบ
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error", error);
-                document.getElementById('admin-activities-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-            }
-        };
-
-        // Initialize Data on load
-        window.loadMembersFromFirebase();
-        
-        // Show current date
-        const today = new Date();
-        document.getElementById('current-date').textContent = today.toLocaleDateString('th-TH', { 
-            year: 'numeric', month: 'long', day: 'numeric' 
-        });
-
-    </script>
-</body>
-</html>
+                membersList.forEach((m, index) => {
