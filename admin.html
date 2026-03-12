@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +58,8 @@
             cursor: pointer;
         }
 
-        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
             background: var(--primary, #e74c3c);
             color: white;
         }
@@ -79,7 +81,7 @@
         .topbar {
             background: #fff;
             padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             border-radius: var(--radius-md, 8px);
             display: flex;
@@ -98,7 +100,7 @@
             background: #fff;
             padding: 20px;
             border-radius: var(--radius-md, 8px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -108,7 +110,10 @@
             font-size: 2.5rem;
             color: var(--primary, #e74c3c);
         }
-        .card-icon.blue { color: #3498db; }
+
+        .card-icon.blue {
+            color: #3498db;
+        }
 
         .card-info h4 {
             margin: 0 0 5px 0;
@@ -127,7 +132,7 @@
             background: #fff;
             padding: 20px;
             border-radius: var(--radius-md, 8px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
@@ -150,7 +155,8 @@
             border-collapse: collapse;
         }
 
-        .admin-table th, .admin-table td {
+        .admin-table th,
+        .admin-table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #eee;
@@ -182,7 +188,7 @@
             background-color: var(--primary, #e74c3c);
             color: white;
         }
-        
+
         .btn-primary-sm:hover {
             background-color: #c0392b;
         }
@@ -210,7 +216,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             align-items: center;
             justify-content: center;
         }
@@ -248,18 +254,22 @@
             .sidebar {
                 width: 60px;
             }
-            .sidebar-header h3, .sidebar-menu li a span {
+
+            .sidebar-header h3,
+            .sidebar-menu li a span {
                 display: none;
             }
+
             .main-content {
                 margin-left: 60px;
                 width: calc(100% - 60px);
             }
         }
-        
+
         .section-view {
             display: none;
         }
+
         .section-view.active {
             display: block;
         }
@@ -282,7 +292,7 @@
             background: white;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 400px;
             text-align: center;
@@ -326,6 +336,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Login Overlay -->
@@ -334,12 +345,15 @@
             <i class="fa-solid fa-lock" style="font-size: 3rem; color: #e74c3c; margin-bottom: 20px;"></i>
             <h2>เข้าสู่ระบบหลังบ้าน</h2>
             <form id="login-form">
-                <input type="text" id="admin-username" placeholder="ชื่อผู้ใช้ (Username)" required autofocus style="margin-bottom: 10px;">
+                <input type="text" id="admin-username" placeholder="ชื่อผู้ใช้ (Username)" required autofocus
+                    style="margin-bottom: 10px;">
                 <input type="password" id="admin-password" placeholder="รหัสผ่าน (Password)" required>
                 <button type="submit">เข้าสู่ระบบ</button>
             </form>
-            <p id="login-error" style="color: #e74c3c; margin-top: 15px; display: none;">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</p>
-            <a href="index.html" style="display: block; margin-top: 20px; color: #7f8c8d; text-decoration: none; font-size: 0.9rem;">
+            <p id="login-error" style="color: #e74c3c; margin-top: 15px; display: none;">
+                ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</p>
+            <a href="index.html"
+                style="display: block; margin-top: 20px; color: #7f8c8d; text-decoration: none; font-size: 0.9rem;">
                 <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
             </a>
         </div>
@@ -348,197 +362,153 @@
     <!-- Admin Panel Wrapper (Hidden until login) -->
     <div id="admin-panel-wrapper" style="display: flex;">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3><i class="fa-solid fa-dragon"></i> แอดมิน</h3>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a id="nav-members" class="active" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> <span>จัดการสมาชิก</span></a></li>
-            <li><a id="nav-activities" onclick="switchTab('activities')"><i class="fa-solid fa-calendar-days"></i> <span>จัดการกิจกรรม</span></a></li>
-            <li><a id="nav-committee" onclick="switchTab('committee')"><i class="fa-solid fa-user-tie"></i> <span>จัดการกรรมการ</span></a></li>
-            <li><a id="nav-admins" onclick="switchTab('admins')"><i class="fa-solid fa-user-shield"></i> <span>จัดการแอดมิน</span></a></li>
-            <li><a href="index.html"><i class="fa-solid fa-home"></i> <span>กลับหน้าหลัก</span></a></li>
-            <li><a onclick="logout()" style="color: #e74c3c;"><i class="fa-solid fa-right-from-bracket"></i> <span>ออกจากระบบ</span></a></li>
-        </ul>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="topbar">
-            <div>
-                <h2 id="page-title" style="margin: 0; font-size: 1.5rem; color: #2c3e50;">ระบบจัดการหลังบ้าน (Admin Panel)</h2>
-                <div id="welcome-msg" style="color: #666; font-size: 0.9rem; margin-top: 5px;"></div>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-dragon"></i> แอดมิน</h3>
             </div>
-            <div>
-                <span style="color: #7f8c8d;"><i class="fa-regular fa-calendar"></i> <span id="current-date"></span></span>
-            </div>
+            <ul class="sidebar-menu">
+                <li><a id="nav-members" class="active" onclick="switchTab('members')"><i
+                            class="fa-solid fa-users-gear"></i>
+                        <span>จัดการสมาชิก</span></a></li>
+                <li><a id="nav-members-list" onclick="switchTab('members-list')"><i
+                            class="fa-solid fa-address-book"></i>
+                        <span>รายชื่อสมาชิกทั้งหมด</span></a></li>
+                <li><a id="nav-activities" onclick="switchTab('activities')"><i class="fa-solid fa-calendar-days"></i>
+                        <span>จัดการกิจกรรม</span></a></li>
+                <li><a id="nav-committee" onclick="switchTab('committee')"><i class="fa-solid fa-user-tie"></i>
+                        <span>จัดการกรรมการ</span></a></li>
+                <li><a id="nav-admins" onclick="switchTab('admins')"><i class="fa-solid fa-user-shield"></i>
+                        <span>จัดการแอดมิน</span></a></li>
+                <li><a href="index.html"><i class="fa-solid fa-home"></i> <span>กลับหน้าหลัก</span></a></li>
+                <li><a onclick="logout()" style="color: #e74c3c;"><i class="fa-solid fa-right-from-bracket"></i>
+                        <span>ออกจากระบบ</span></a></li>
+            </ul>
         </div>
 
-        <!-- Section: Members -->
-        <div id="section-members" class="section-view active">
-            <div class="dashboard-cards">
-                <div class="card">
-                    <div class="card-info">
-                        <h4>จำนวนสมาชิกรวม</h4>
-                        <h2 id="total-members">-</h2>
-                    </div>
-                    <div class="card-icon">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <div>
+                    <h2 id="page-title" style="margin: 0; font-size: 1.5rem; color: #2c3e50;">ระบบจัดการหลังบ้าน (Admin
+                        Panel)</h2>
+                    <div id="welcome-msg" style="color: #666; font-size: 0.9rem; margin-top: 5px;"></div>
+                </div>
+                <div>
+                    <span style="color: #7f8c8d;"><i class="fa-regular fa-calendar"></i> <span
+                            id="current-date"></span></span>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>รายการผู้สมัครสมาชิก</h3>
-                    <button class="btn-sm btn-primary-sm" onclick="loadMembersFromFirebase()">
-                        <i class="fa-solid fa-rotate-right"></i> รีเฟรช
-                    </button>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ลำดับ</th>
-                                <th>เลขประจำตัว</th>
-                                <th>ชื่อ - นามสกุล</th>
-                                <th>เพศ</th>
-                                <th>ระดับชั้น</th>
-                                <th>เหตุผลที่อยากเข้า</th>
-                                <th>วันที่สมัคร</th>
-                                <th>สถานะการอนุมัติ</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-members-tbody">
-                            <tr>
-                                <td colspan="8" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section: Activities -->
-        <div id="section-activities" class="section-view">
-            <div class="dashboard-cards">
-                <div class="card">
-                    <div class="card-info">
-                        <h4>จำนวนกิจกรรมทั้งหมด</h4>
-                        <h2 id="total-activities">-</h2>
-                    </div>
-                    <div class="card-icon blue">
-                        <i class="fa-solid fa-calendar-check"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>รายการกิจกรรม</h3>
-                    <div>
-                        <button class="btn-sm btn-success-sm" onclick="openActivityModal()">
-                            <i class="fa-solid fa-plus"></i> เพิ่มกิจกรรมใหม่
-                        </button>
-                        <button class="btn-sm btn-primary-sm" onclick="loadActivitiesFromFirebase()">
-                            <i class="fa-solid fa-rotate-right"></i> รีเฟรช
-                        </button>
-                    </div>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ลำดับ</th>
-                                <th>ภาพปก</th>
-                                <th>ชื่อกิจกรรม</th>
-                                <th>วันที่จัดกิจกรรม</th>
-                                <th>คำอธิบายแบบย่อ</th>
-                                <th>สถานะ</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-activities-tbody">
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section: Committee -->
-        <div id="section-committee" class="section-view">
-            <div class="dashboard-cards">
-                <div class="card">
-                    <div class="card-info">
-                        <h4>จำนวนกรรมการทั้งหมด</h4>
-                        <h2 id="total-committee">-</h2>
-                    </div>
-                    <div class="card-icon blue">
-                        <i class="fa-solid fa-user-tie"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>รายชื่อคณะกรรมการชมรม</h3>
-                    <div>
-                        <button class="btn-sm btn-success-sm" onclick="openCommitteeModal()">
-                            <i class="fa-solid fa-plus"></i> เพิ่มกรรมการใหม่
-                        </button>
-                        <button class="btn-sm btn-primary-sm" onclick="loadCommitteeFromFirebase()">
-                            <i class="fa-solid fa-rotate-right"></i> รีเฟรช
-                        </button>
-                    </div>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ลำดับ</th>
-                                <th>รูปภาพ</th>
-                                <th>ชื่อ - นามสกุล</th>
-                                <th>ประเภท</th>
-                                <th>ตำแหน่ง</th>
-                                <th>ระดับชั้น</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-committee-tbody">
-                            <tr>
-                                <td colspan="7" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- Admin Management Section -->
-            <div id="section-admins" class="section-view">
+            <!-- Section: Members -->
+            <div id="section-members" class="section-view active">
                 <div class="dashboard-cards">
                     <div class="card">
                         <div class="card-info">
-                            <h4>จำนวนแอดมินทั้งหมด</h4>
-                            <h2 id="total-admins">-</h2>
+                            <h4>จำนวนสมาชิกรวม</h4>
+                            <h2 id="total-members">-</h2>
                         </div>
                         <div class="card-icon">
-                            <i class="fa-solid fa-user-shield"></i>
+                            <i class="fa-solid fa-users"></i>
                         </div>
                     </div>
                 </div>
 
                 <div class="panel">
                     <div class="panel-header">
-                        <h3>รายชื่อผู้ดูแลระบบ (Admins)</h3>
-                        <div>
-                            <button class="btn-sm btn-success-sm" onclick="openAdminManageModal()">
-                                <i class="fa-solid fa-user-plus"></i> เพิ่มแอดมินใหม่
+                        <h3>รายการผู้สมัครสมาชิก</h3>
+                        <button class="btn-sm btn-primary-sm" onclick="loadMembersFromFirebase()">
+                            <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับ</th>
+                                    <th>เลขประจำตัว</th>
+                                    <th>รหัสสมาชิก</th>
+                                    <th>ชื่อ - นามสกุล</th>
+                                    <th>เพศ</th>
+                                    <th>ระดับชั้น</th>
+                                    <th>เหตุผลที่อยากเข้า</th>
+                                    <th>วันที่สมัคร</th>
+                                    <th>สถานะการอนุมัติ</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-members-tbody">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: #666; padding: 20px;">
+                                        กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Members List (Official Approved List) -->
+            <div id="section-members-list" class="section-view">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>รายชื่อสมาชิกทั้งหมด (ที่อนุมัติแล้ว)</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-sm btn-primary-sm" onclick="window.loadApprovedMembers()">
+                                <i class="fa-solid fa-rotate-right"></i> รีเฟรช
                             </button>
-                            <button class="btn-sm btn-primary-sm" onclick="loadAdminsFromFirebase()">
+                            <a href="members_list.html" target="_blank" class="btn-sm btn-success-sm"
+                                style="text-decoration: none;">
+                                <i class="fa-solid fa-print"></i> ดูหน้าสำหรับพิมพ์
+                            </a>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับ</th>
+                                    <th>รหัสสมาชิก</th>
+                                    <th>เลขประจำตัว</th>
+                                    <th>ชื่อ - นามสกุล</th>
+                                    <th>เพศ</th>
+                                    <th>ระดับชั้น</th>
+                                    <th>วันที่สมัคร</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-approved-members-tbody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: #666; padding: 20px;">
+                                        กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Activities -->
+            <div id="section-activities" class="section-view">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-info">
+                            <h4>จำนวนกิจกรรมทั้งหมด</h4>
+                            <h2 id="total-activities">-</h2>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>รายการกิจกรรม</h3>
+                        <div>
+                            <button class="btn-sm btn-success-sm" onclick="openActivityModal()">
+                                <i class="fa-solid fa-plus"></i> เพิ่มกิจกรรมใหม่
+                            </button>
+                            <button class="btn-sm btn-primary-sm" onclick="loadActivitiesFromFirebase()">
                                 <i class="fa-solid fa-rotate-right"></i> รีเฟรช
                             </button>
                         </div>
@@ -547,14 +517,19 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>ชื่อแสดงผล</th>
-                                    <th>ชื่อผู้ใช้ (Username)</th>
+                                    <th>ลำดับ</th>
+                                    <th>ภาพปก</th>
+                                    <th>ชื่อกิจกรรม</th>
+                                    <th>วันที่จัดกิจกรรม</th>
+                                    <th>คำอธิบายแบบย่อ</th>
+                                    <th>สถานะ</th>
                                     <th>จัดการ</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-list-tbody">
+                            <tbody id="admin-activities-tbody">
                                 <tr>
-                                    <td colspan="3" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
+                                    <td colspan="6" style="text-align: center; color: #666; padding: 20px;">
+                                        กำลังโหลดข้อมูล...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -562,564 +537,839 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <!-- Modal: Add Activity -->
-    <div id="activity-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeActivityModal()">&times;</span>
-            <h2 style="margin-top:0;">เพิ่มกิจกรรมใหม่</h2>
-            <form id="add-activity-form">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อกิจกรรม *</label>
-                    <input type="text" id="act-title" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">วันที่จัดกิจกรรม *</label>
-                    <input type="date" id="act-date" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพหน้าปก (จาก Google Drive)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="act-image" required class="form-control" placeholder="URL รูปภาพหน้าปก" style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
-                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('act-image')" style="white-space: nowrap;">
-                            <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
-                        </button>
+            <!-- Section: Committee -->
+            <div id="section-committee" class="section-view">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-info">
+                            <h4>จำนวนกรรมการทั้งหมด</h4>
+                            <h2 id="total-committee">-</h2>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">คำอธิบายแบบย่อ *</label>
-                    <textarea id="act-desc" required class="form-control" rows="2" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เนื้อหาแบบยาว (ถ้ามี)</label>
-                    <textarea id="act-content" class="form-control" rows="4" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">การแสดงผล *</label>
-                    <select id="act-status" class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                        <option value="show">แสดงหน้าเว็บ</option>
-                        <option value="hide">ซ่อนกิจกรรม</option>
-                    </select>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพเพิ่มเติม (Gallery)</label>
-                    <div style="display: flex; gap: 10px; margin-bottom: 5px;">
-                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('act-gallery-urls', true)">
-                            <i class="fa-brands fa-google-drive"></i> เลือกหลายรูปจาก Drive
-                        </button>
-                        <button type="button" class="btn-sm btn-danger" onclick="document.getElementById('act-gallery-urls').value = ''">
-                            ล้างข้อมูล
-                        </button>
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>รายชื่อคณะกรรมการชมรม</h3>
+                        <div>
+                            <button class="btn-sm btn-success-sm" onclick="openCommitteeModal()">
+                                <i class="fa-solid fa-plus"></i> เพิ่มกรรมการใหม่
+                            </button>
+                            <button class="btn-sm btn-primary-sm" onclick="loadCommitteeFromFirebase()">
+                                <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                            </button>
+                        </div>
                     </div>
-                    <textarea id="act-gallery-urls" class="form-control" rows="3" placeholder="URL รูปภาพเพิ่มเติม (ขึ้นบรรทัดใหม่สำหรับแต่ละรูป)" style="width: 100%; padding: 10px; box-sizing: border-box;" readonly></textarea>
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับ</th>
+                                    <th>รูปภาพ</th>
+                                    <th>ชื่อ - นามสกุล</th>
+                                    <th>ประเภท</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>ระดับชั้น</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-committee-tbody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: #666; padding: 20px;">
+                                        กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Admin Management Section -->
+                <div id="section-admins" class="section-view">
+                    <div class="dashboard-cards">
+                        <div class="card">
+                            <div class="card-info">
+                                <h4>จำนวนแอดมินทั้งหมด</h4>
+                                <h2 id="total-admins">-</h2>
+                            </div>
+                            <div class="card-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>รายชื่อผู้ดูแลระบบ (Admins)</h3>
+                            <div>
+                                <button class="btn-sm btn-success-sm" onclick="openAdminManageModal()">
+                                    <i class="fa-solid fa-user-plus"></i> เพิ่มแอดมินใหม่
+                                </button>
+                                <button class="btn-sm btn-primary-sm" onclick="loadAdminsFromFirebase()">
+                                    <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                                </button>
+                            </div>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ชื่อแสดงผล</th>
+                                        <th>ชื่อผู้ใช้ (Username)</th>
+                                        <th>จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-list-tbody">
+                                    <tr>
+                                        <td colspan="3" style="text-align: center; color: #666; padding: 20px;">
+                                            กำลังโหลดข้อมูล...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
-                    บันทึกกิจกรรม
-                </button>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Modal: Edit Member -->
-    <div id="member-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeMemberModal()">&times;</span>
-            <h2 style="margin-top:0;">แก้ไขข้อมูลสมาชิก</h2>
-            <form id="edit-member-form">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เลขประจำตัวนักเรียน (5 หลัก) *</label>
-                    <input type="text" id="edit-member-studentId" required class="form-control" pattern="\d{5}" maxlength="5" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
-                    <input type="text" id="edit-member-fullname" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เพศ *</label>
-                    <select id="edit-member-gender" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                        <option value="ชาย">ชาย</option>
-                        <option value="หญิง">หญิง</option>
-                    </select>
-                </div>
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                    <div class="form-group" style="flex: 1;">
+        <!-- Modal: Add Activity -->
+        <div id="activity-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeActivityModal()">&times;</span>
+                <h2 style="margin-top:0;">เพิ่มกิจกรรมใหม่</h2>
+                <form id="add-activity-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อกิจกรรม *</label>
+                        <input type="text" id="act-title" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">วันที่จัดกิจกรรม *</label>
+                        <input type="date" id="act-date" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพหน้าปก (จาก Google
+                            Drive)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="act-image" required class="form-control"
+                                placeholder="URL รูปภาพหน้าปก" style="flex: 1; padding: 10px; box-sizing: border-box;"
+                                readonly>
+                            <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('act-image')"
+                                style="white-space: nowrap;">
+                                <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">คำอธิบายแบบย่อ *</label>
+                        <textarea id="act-desc" required class="form-control" rows="2"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">เนื้อหาแบบยาว (ถ้ามี)</label>
+                        <textarea id="act-content" class="form-control" rows="4"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">การแสดงผล *</label>
+                        <select id="act-status" class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                            <option value="show">แสดงหน้าเว็บ</option>
+                            <option value="hide">ซ่อนกิจกรรม</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพเพิ่มเติม
+                            (Gallery)</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                            <button type="button" class="btn-sm btn-success-sm"
+                                onclick="openGooglePicker('act-gallery-urls', true)">
+                                <i class="fa-brands fa-google-drive"></i> เลือกหลายรูปจาก Drive
+                            </button>
+                            <button type="button" class="btn-sm btn-danger"
+                                onclick="document.getElementById('act-gallery-urls').value = ''">
+                                ล้างข้อมูล
+                            </button>
+                        </div>
+                        <textarea id="act-gallery-urls" class="form-control" rows="3"
+                            placeholder="URL รูปภาพเพิ่มเติม (ขึ้นบรรทัดใหม่สำหรับแต่ละรูป)"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;" readonly></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-sm btn-primary-sm"
+                        style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                        บันทึกกิจกรรม
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal: Edit Member -->
+        <div id="member-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeMemberModal()">&times;</span>
+                <h2 style="margin-top:0;">แก้ไขข้อมูลสมาชิก</h2>
+                <form id="edit-member-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">เลขประจำตัวนักเรียน
+                            (เว้นว่างได้ถ้าไม่ใช่หมวดปกติ)</label>
+                        <input type="text" id="edit-member-studentId" class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;" placeholder="ตัวอย่าง: 12345">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">รหัสสมาชิกชมรม
+                            (CZ-xxx)</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                            <input type="text" id="edit-member-memberId" class="form-control"
+                                style="flex: 1; padding: 10px; box-sizing: border-box;"
+                                placeholder="รหัสสมาชิก (เช่น CZ-001)">
+                            <button type="button" class="btn-sm btn-success-sm" onclick="suggestId(false)"
+                                title="สุ่มรหัสหมวดปกติ (001-879)">
+                                <i class="fa-solid fa-plus"></i> ปกติ
+                            </button>
+                            <button type="button" class="btn-sm btn-primary-sm" onclick="suggestId(true)"
+                                title="สุ่มรหัสหมวดพิเศษ (880-999)">
+                                <i class="fa-solid fa-star"></i> พิเศษ
+                            </button>
+                        </div>
+                        <small style="color: #666;">* สามารถพิมพ์แก้ไขเองได้ หรือกดปุ่มเพื่อใช้รหัสลำดับถัดไป</small>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
+                        <input type="text" id="edit-member-fullname" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">เพศ *</label>
+                        <select id="edit-member-gender" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                            <option value="ชาย">ชาย</option>
+                            <option value="หญิง">หญิง</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
+                            <select id="edit-member-grade" required class="form-control"
+                                style="width: 100%; padding: 10px; box-sizing: border-box;"
+                                onchange="updateEditRooms()">
+                                <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                                <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                                <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                                <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                                <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                                <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="display:block; margin-bottom:5px; font-weight:bold;">ห้อง *</label>
+                            <select id="edit-member-room" required class="form-control"
+                                style="width: 100%; padding: 10px; box-sizing: border-box;">
+                                <option value="">-- เลือกห้อง --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">เหตุผลที่อยากเข้าชมรม
+                            *</label>
+                        <textarea id="edit-member-motivation" required class="form-control" rows="3"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-sm btn-primary-sm"
+                        style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                        บันทึกการเปลี่ยนแปลง
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal: Add/Edit Committee -->
+        <div id="committee-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeCommitteeModal()">&times;</span>
+                <h2 id="committee-modal-title" style="margin-top:0;">เพิ่มกรรมการใหม่</h2>
+                <form id="add-committee-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
+                        <input type="text" id="com-name" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">หมวดหมู่ *</label>
+                        <select id="com-type" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                            <option value="คณะกรรมการบริหาร">คณะกรรมการบริหาร</option>
+                            <option value="คณะที่ปรึกษาชมรม">คณะที่ปรึกษาชมรม</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ตำแหน่ง *</label>
+                        <input type="text" id="com-position" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
                         <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
-                        <select id="edit-member-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;" onchange="updateEditRooms()">
-                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-                            <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
-                            <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
-                            <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
-                        </select>
+                        <input type="text" id="com-grade" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
                     </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ห้อง *</label>
-                        <select id="edit-member-room" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                            <option value="">-- เลือกห้อง --</option>
-                        </select>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ลำดับการแสดงผล (ตัวเลข เช่น
+                            1, 2, 3...)</label>
+                        <input type="number" id="com-order" class="form-control" value="99"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
                     </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เหตุผลที่อยากเข้าชมรม *</label>
-                    <textarea id="edit-member-motivation" required class="form-control" rows="3" style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
-                </div>
-                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
-                    บันทึกการเปลี่ยนแปลง
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal: Add/Edit Committee -->
-    <div id="committee-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeCommitteeModal()">&times;</span>
-            <h2 id="committee-modal-title" style="margin-top:0;">เพิ่มกรรมการใหม่</h2>
-            <form id="add-committee-form">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
-                    <input type="text" id="com-name" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">หมวดหมู่ *</label>
-                    <select id="com-type" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                        <option value="คณะกรรมการบริหาร">คณะกรรมการบริหาร</option>
-                        <option value="คณะที่ปรึกษาชมรม">คณะที่ปรึกษาชมรม</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ตำแหน่ง *</label>
-                    <input type="text" id="com-position" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
-                    <input type="text" id="com-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ลำดับการแสดงผล (ตัวเลข เช่น 1, 2, 3...)</label>
-                    <input type="number" id="com-order" class="form-control" value="99" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ประวัติโดยย่อ / คำอธิบายเพิ่มเติม</label>
-                    <textarea id="com-bio" class="form-control" rows="3" placeholder="ประวัติสั้นๆ หรือผลงานที่ผ่านมา..." style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพ (จาก Google Drive)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="com-image" class="form-control" placeholder="URL รูปภาพ" style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
-                        <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('com-image')">
-                            <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
-                        </button>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ประวัติโดยย่อ /
+                            คำอธิบายเพิ่มเติม</label>
+                        <textarea id="com-bio" class="form-control" rows="3"
+                            placeholder="ประวัติสั้นๆ หรือผลงานที่ผ่านมา..."
+                            style="width: 100%; padding: 10px; box-sizing: border-box;"></textarea>
                     </div>
-                </div>
-                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
-                    บันทึกข้อมูล
-                </button>
-            </form>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">รูปภาพ (จาก Google
+                            Drive)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="com-image" class="form-control" placeholder="URL รูปภาพ"
+                                style="flex: 1; padding: 10px; box-sizing: border-box;" readonly>
+                            <button type="button" class="btn-sm btn-success-sm" onclick="openGooglePicker('com-image')">
+                                <i class="fa-brands fa-google-drive"></i> เลือกจาก Drive
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-sm btn-primary-sm"
+                        style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                        บันทึกข้อมูล
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Modal: Add/Edit Admin -->
-    <div id="admin-manage-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAdminManageModal()">&times;</span>
-            <h2 id="admin-manage-modal-title" style="margin-top:0;">เพิ่มแอดมินใหม่</h2>
-            <form id="admin-manage-form">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อแอดมิน (สำหรับแสดงผล) *</label>
-                    <input type="text" id="admin-display-name" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อผู้ใช้ (Username) *</label>
-                    <input type="text" id="admin-user-id" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">รหัสผ่าน *</label>
-                    <input type="password" id="admin-user-pwd" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                </div>
-                <button type="submit" class="btn-sm btn-primary-sm" style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
-                    บันทึกข้อมูลแอดมิน
-                </button>
-            </form>
+        <!-- Modal: Add/Edit Admin -->
+        <div id="admin-manage-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeAdminManageModal()">&times;</span>
+                <h2 id="admin-manage-modal-title" style="margin-top:0;">เพิ่มแอดมินใหม่</h2>
+                <form id="admin-manage-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อแอดมิน (สำหรับแสดงผล)
+                            *</label>
+                        <input type="text" id="admin-display-name" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อผู้ใช้ (Username)
+                            *</label>
+                        <input type="text" id="admin-user-id" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">รหัสผ่าน *</label>
+                        <input type="password" id="admin-user-pwd" required class="form-control"
+                            style="width: 100%; padding: 10px; box-sizing: border-box;">
+                    </div>
+                    <button type="submit" class="btn-sm btn-primary-sm"
+                        style="width: 100%; padding: 12px; font-size: 1rem; justify-content: center;">
+                        บันทึกข้อมูลแอดมิน
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Firebase SDK (Modular) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        <!-- Firebase SDK (Modular) -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+            import { getFirestore, collection, getDocs, query, orderBy, doc, deleteDoc, addDoc, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
-            authDomain: "cultural-plaza.firebaseapp.com",
-            projectId: "cultural-plaza",
-            storageBucket: "cultural-plaza.firebasestorage.app",
-            messagingSenderId: "327844017948",
-            appId: "1:327844017948:web:605158835ff985ffdbecd9",
-            measurementId: "G-BM3TTLGPEK"
-        };
+            const firebaseConfig = {
+                apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
+                authDomain: "cultural-plaza.firebaseapp.com",
+                projectId: "cultural-plaza",
+                storageBucket: "cultural-plaza.firebasestorage.app",
+                messagingSenderId: "327844017948",
+                appId: "1:327844017948:web:605158835ff985ffdbecd9",
+                measurementId: "G-BM3TTLGPEK"
+            };
 
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
 
-        // --- Multi-Admin Login Logic ---
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const user = document.getElementById('admin-username').value;
-            const pwd = document.getElementById('admin-password').value;
-            const errorMsg = document.getElementById('login-error');
-            const btn = this.querySelector('button');
+            // --- Multi-Admin Login Logic ---
+            document.getElementById('login-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const user = document.getElementById('admin-username').value;
+                const pwd = document.getElementById('admin-password').value;
+                const errorMsg = document.getElementById('login-error');
+                const btn = this.querySelector('button');
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
-            errorMsg.style.display = 'none';
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
+                errorMsg.style.display = 'none';
 
-            try {
-                let querySnapshot;
                 try {
-                    const q = query(collection(db, "admins"));
-                    querySnapshot = await getDocs(q);
-                } catch (dbErr) {
-                    console.error("Firebase Login Error:", dbErr);
-                    // Emergency Fallback: If DB is blocked (likely rules) but credentials are swk/swk
-                    if (user === 'swk' && pwd === 'swk') {
-                        loginSuccess({ name: 'System Setup (Emergency)', user: 'swk' });
+                    let querySnapshot;
+                    try {
+                        const q = query(collection(db, "admins"));
+                        querySnapshot = await getDocs(q);
+                    } catch (dbErr) {
+                        console.error("Firebase Login Error:", dbErr);
+                        // Emergency Fallback: If DB is blocked (likely rules) but credentials are swk/swk
+                        if (user === 'swk' && pwd === 'swk') {
+                            loginSuccess({ name: 'System Setup (Emergency)', user: 'swk' });
+                            return;
+                        }
+                        throw dbErr;
+                    }
+
+                    // If no admins exist yet, allow initial setup
+                    if (querySnapshot.empty && user === 'swk' && pwd === 'swk') {
+                        loginSuccess({ name: 'System Setup', user: 'swk' });
                         return;
                     }
-                    throw dbErr;
-                }
-                
-                // If no admins exist yet, allow initial setup
-                if (querySnapshot.empty && user === 'swk' && pwd === 'swk') {
-                    loginSuccess({ name: 'System Setup', user: 'swk' });
-                    return;
-                }
 
-                let found = false;
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.username === user && data.password === pwd) {
-                        found = true;
-                        loginSuccess({ name: data.name, user: data.username });
-                    }
-                });
-
-                if (!found) {
-                    errorMsg.style.display = 'block';
-                    errorMsg.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
-                    document.getElementById('admin-password').value = '';
-                }
-            } catch (err) {
-                console.error("Connection Error Details:", err);
-                alert('ไม่สามารถเชื่อมต่อฐานข้อมูลได้: ' + (err.message || 'โปรดตรวจสอบสิทธิ์การเข้าถึง (Security Rules) ใน Firebase'));
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'เข้าสู่ระบบ';
-            }
-        });
-
-        function loginSuccess(admin) {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('admin-panel-wrapper').style.display = 'flex';
-            document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${admin.name}`;
-            window.loadMembersFromFirebase();
-            sessionStorage.setItem('isAdminLoggedIn', 'true');
-            sessionStorage.setItem('adminName', admin.name);
-        }
-
-        // Check Session on Load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('admin-panel-wrapper').style.display = 'flex';
-                document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${sessionStorage.getItem('adminName') || 'แอดมิน'}`;
-                window.loadMembersFromFirebase();
-            } else {
-                document.getElementById('admin-panel-wrapper').style.display = 'none';
-            }
-
-            // Current Date
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('th-TH', options);
-        });
-
-        // --- Helper Functions ---
-        function formatDateTimeFromFirestore(timestamp) {
-            if (!timestamp) return '-';
-            const date = timestamp.toDate();
-            const d = String(date.getDate()).padStart(2, '0');
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const y = date.getFullYear();
-            const h = String(date.getHours()).padStart(2, '0');
-            const min = String(date.getMinutes()).padStart(2, '0');
-            return `${d}/${m}/${y} ${h}:${min}`;
-        }
-        
-        function formatImageUrl(url) {
-            if (!url) return 'https://via.placeholder.com/100x100?text=No+Image';
-            
-            let fileId = null;
-            if (url.includes('id=')) {
-                const match = url.match(/id=([^&]+)/);
-                if (match && match[1]) fileId = match[1];
-            } else if (url.includes('drive.google.com/file/d/')) {
-                const match = url.match(/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) fileId = match[1];
-            }
-
-            if (fileId) {
-                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
-            }
-            
-            return url;
-        }
-
-        // --- Tab Control ---
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.sidebar-menu a').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`section-${tabName}`).classList.add('active');
-            document.getElementById(`nav-${tabName}`).classList.add('active');
-            
-            if(tabName === 'activities') {
-                window.loadActivitiesFromFirebase();
-            } else if(tabName === 'committee') {
-                window.loadCommitteeFromFirebase();
-            } else if(tabName === 'admins') {
-                window.loadAdminsFromFirebase();
-            } else {
-                window.loadMembersFromFirebase();
-            }
-        };
-
-        // --- Google Drive Picker API ---
-        const developerKey = 'AIzaSyCx0IT1c6WBjkJuTPARB4bNaRacihWVWlQ';
-        const clientId = '327844017948-nvelbt6gk5a5eu53nmid3icrgoiqrbm0.apps.googleusercontent.com';
-        const appId = '327844017948';
-        const scope = ['https://www.googleapis.com/auth/drive.readonly'];
-        
-        let pickerApiLoaded = false;
-        let oauthToken;
-        let currentTargetInputId = '';
-        let isMultipleSelection = false;
-
-        function loadPicker() {
-            gapi.load('picker', {'callback': function() { pickerApiLoaded = true; }});
-        }
-        window.onload = loadPicker; // โหลดตัว Picker รอไว้เลยตั้งแต่เปิดหน้าเว็บ
-
-        window.openGooglePicker = function(targetInputId, multiple = false) {
-            currentTargetInputId = targetInputId;
-            isMultipleSelection = multiple;
-            
-            // ใช้ Google Services Identity (GSI) ในการขอสิทธิ์
-            const tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: clientId,
-                scope: scope.join(' '),
-                callback: (tokenResponse) => {
-                    if (tokenResponse && tokenResponse.access_token) {
-                        oauthToken = tokenResponse.access_token;
-                        createPicker();
-                    }
-                },
-            });
-            tokenClient.requestAccessToken();
-        };
-
-        function createPicker() {
-            if (pickerApiLoaded && oauthToken) {
-                // กรองให้เห็นเฉพาะรูปภาพ (Photos)
-                const view = new google.picker.View(google.picker.ViewId.DOCS);
-                view.setMimeTypes("image/png,image/jpeg,image/jpg");
-
-                const pickerBuilder = new google.picker.PickerBuilder()
-                    .addView(view)
-                    .setOAuthToken(oauthToken)
-                    .setDeveloperKey(developerKey)
-                    .setCallback(pickerCallback)
-                    .setOrigin(window.location.protocol + '//' + window.location.host); // เพิ่มบรรทัดนี้เพื่อแก้ไขปัญหา API Developer Key is invalid
-
-                // หากระบุว่าสามารถเลือกไฟล์ได้หลายไฟล์
-                if (isMultipleSelection) {
-                    pickerBuilder.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
-                }
-
-                const picker = pickerBuilder.build();
-                picker.setVisible(true);
-            }
-        }
-
-        function pickerCallback(data) {
-            if (data.action == google.picker.Action.PICKED) {
-                const targetElement = document.getElementById(currentTargetInputId);
-                
-                if (isMultipleSelection) {
-                     // ถ้าเลือกหลายรูป (Gallery)
-                    let currentUrls = targetElement.value ? targetElement.value.split('\n') : [];
-                    data.docs.forEach(doc => {
-                        const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
-                        if (!currentUrls.includes(url)) {
-                            currentUrls.push(url);
+                    let found = false;
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        if (data.username === user && data.password === pwd) {
+                            found = true;
+                            loginSuccess({ name: data.name, user: data.username });
                         }
                     });
-                    targetElement.value = currentUrls.join('\n');
-                } else {
-                     // ถ้าเลือกรูปเดียว (Cover, Committee)
-                    const doc = data.docs[0];
-                    const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
-                    targetElement.value = url;
+
+                    if (!found) {
+                        errorMsg.style.display = 'block';
+                        errorMsg.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                        document.getElementById('admin-password').value = '';
+                    }
+                } catch (err) {
+                    console.error("Connection Error Details:", err);
+                    alert('ไม่สามารถเชื่อมต่อฐานข้อมูลได้: ' + (err.message || 'โปรดตรวจสอบสิทธิ์การเข้าถึง (Security Rules) ใน Firebase'));
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = 'เข้าสู่ระบบ';
                 }
-            }
-        }
-        window.updateEditRooms = function(selectedRoom = null) {
-            const grade = document.getElementById('edit-member-grade').value;
-            const roomSelect = document.getElementById('edit-member-room');
-            
-            roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
-            
-            let maxRooms = 0;
-            if (['ม.1', 'ม.2', 'ม.3'].includes(grade)) {
-                maxRooms = 15;
-            } else if (['ม.4', 'ม.5', 'ม.6'].includes(grade)) {
-                maxRooms = 16;
-            }
-            
-            for (let i = 1; i <= maxRooms; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `ห้อง ${i}`;
-                if (selectedRoom && String(i) === String(selectedRoom)) {
-                    option.selected = true;
-                }
-                roomSelect.appendChild(option);
-            }
-        };
+            });
 
-        // --- MEMBERS MANAGEMENT ---
-        let membersList = [];
-        window.openEditMemberModal = function(id) {
-            const member = membersList.find(m => m.id === id);
-            if(member) {
-                window.currentEditMemberId = id;
-                document.getElementById('edit-member-fullname').value = member.fullname || '';
-                document.getElementById('edit-member-studentId').value = member.studentId || '';
-                document.getElementById('edit-member-gender').value = member.gender || 'ชาย';
-                
-                // แยกค่า ม.X/Y
-                let gradeVal = 'ม.1';
-                let roomVal = '1';
-                if (member.grade && member.grade.includes('/')) {
-                    const parts = member.grade.split('/');
-                    gradeVal = parts[0];
-                    roomVal = parts[1];
-                } else if (member.grade) {
-                    gradeVal = member.grade;
-                }
-
-                document.getElementById('edit-member-grade').value = gradeVal;
-                window.updateEditRooms(roomVal);
-                
-                document.getElementById('edit-member-motivation').value = member.motivation || '';
-                document.getElementById('member-modal').classList.add('active');
-            }
-        };
-        window.closeMemberModal = function() {
-            document.getElementById('member-modal').classList.remove('active');
-            window.currentEditMemberId = null;
-        };
-
-        document.getElementById('edit-member-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button[type="submit"]');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
-            btn.disabled = true;
-            try {
-                const memberRef = doc(db, "members", window.currentEditMemberId);
-                const grade = document.getElementById('edit-member-grade').value;
-                const room = document.getElementById('edit-member-room').value;
-                const fullGrade = `${grade}/${room}`;
-
-                await updateDoc(memberRef, {
-                    fullname: document.getElementById('edit-member-fullname').value,
-                    studentId: document.getElementById('edit-member-studentId').value,
-                    gender: document.getElementById('edit-member-gender').value,
-                    grade: fullGrade,
-                    motivation: document.getElementById('edit-member-motivation').value
-                });
-                alert('แก้ไขข้อมูลสำเร็จ');
-                window.closeMemberModal();
+            function loginSuccess(admin) {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-panel-wrapper').style.display = 'flex';
+                document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${admin.name}`;
                 window.loadMembersFromFirebase();
-            } catch (err) {
-                console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
-            } finally {
-                btn.innerHTML = 'บันทึกการเปลี่ยนแปลง';
-                btn.disabled = false;
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                sessionStorage.setItem('adminName', admin.name);
             }
-        });
 
-        window.deleteMember = async function(id) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกท่านนี้?')) {
-                try {
-                    await deleteDoc(doc(db, "members", id));
-                    alert('ลบข้อมูลสำเร็จ');
+            // Check Session on Load
+            window.addEventListener('DOMContentLoaded', () => {
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    document.getElementById('login-overlay').style.display = 'none';
+                    document.getElementById('admin-panel-wrapper').style.display = 'flex';
+                    document.getElementById('welcome-msg').textContent = `ยินดีต้อนรับคุณ, ${sessionStorage.getItem('adminName') || 'แอดมิน'}`;
                     window.loadMembersFromFirebase();
-                } catch(error) {
-                    console.error("Error", error);
-                    alert('เกิดข้อผิดพลาด');
+                } else {
+                    document.getElementById('admin-panel-wrapper').style.display = 'none';
+                }
+
+                // Current Date
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('current-date').textContent = now.toLocaleDateString('th-TH', options);
+            });
+
+            // --- Helper Functions ---
+            function formatDateTimeFromFirestore(timestamp) {
+                if (!timestamp) return '-';
+                const date = timestamp.toDate();
+                const d = String(date.getDate()).padStart(2, '0');
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const y = date.getFullYear();
+                const h = String(date.getHours()).padStart(2, '0');
+                const min = String(date.getMinutes()).padStart(2, '0');
+                return `${d}/${m}/${y} ${h}:${min}`;
+            }
+
+            function formatImageUrl(url) {
+                if (!url) return 'https://via.placeholder.com/100x100?text=No+Image';
+
+                let fileId = null;
+                if (url.includes('id=')) {
+                    const match = url.match(/id=([^&]+)/);
+                    if (match && match[1]) fileId = match[1];
+                } else if (url.includes('drive.google.com/file/d/')) {
+                    const match = url.match(/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) fileId = match[1];
+                }
+
+                if (fileId) {
+                    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+                }
+
+                return url;
+            }
+
+            // --- Tab Control ---
+            window.switchTab = function (tabName) {
+                document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.sidebar-menu a').forEach(el => el.classList.remove('active'));
+
+                document.getElementById(`section-${tabName}`).classList.add('active');
+                document.getElementById(`nav-${tabName}`).classList.add('active');
+
+                if (tabName === 'activities') {
+                    window.loadActivitiesFromFirebase();
+                } else if (tabName === 'committee') {
+                    window.loadCommitteeFromFirebase();
+                } else if (tabName === 'admins') {
+                    window.loadAdminsFromFirebase();
+                } else if (tabName === 'members-list') {
+                    window.loadApprovedMembers();
+                } else {
+                    window.loadMembersFromFirebase();
+                }
+            };
+
+            // --- Google Drive Picker API ---
+            const developerKey = 'AIzaSyCx0IT1c6WBjkJuTPARB4bNaRacihWVWlQ';
+            const clientId = '327844017948-nvelbt6gk5a5eu53nmid3icrgoiqrbm0.apps.googleusercontent.com';
+            const appId = '327844017948';
+            const scope = ['https://www.googleapis.com/auth/drive.readonly'];
+
+            let pickerApiLoaded = false;
+            let oauthToken;
+            let currentTargetInputId = '';
+            let isMultipleSelection = false;
+
+            function loadPicker() {
+                gapi.load('picker', { 'callback': function () { pickerApiLoaded = true; } });
+            }
+            window.onload = loadPicker; // โหลดตัว Picker รอไว้เลยตั้งแต่เปิดหน้าเว็บ
+
+            window.openGooglePicker = function (targetInputId, multiple = false) {
+                currentTargetInputId = targetInputId;
+                isMultipleSelection = multiple;
+
+                // ใช้ Google Services Identity (GSI) ในการขอสิทธิ์
+                const tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: clientId,
+                    scope: scope.join(' '),
+                    callback: (tokenResponse) => {
+                        if (tokenResponse && tokenResponse.access_token) {
+                            oauthToken = tokenResponse.access_token;
+                            createPicker();
+                        }
+                    },
+                });
+                tokenClient.requestAccessToken();
+            };
+
+            function createPicker() {
+                if (pickerApiLoaded && oauthToken) {
+                    // กรองให้เห็นเฉพาะรูปภาพ (Photos)
+                    const view = new google.picker.View(google.picker.ViewId.DOCS);
+                    view.setMimeTypes("image/png,image/jpeg,image/jpg");
+
+                    const pickerBuilder = new google.picker.PickerBuilder()
+                        .addView(view)
+                        .setOAuthToken(oauthToken)
+                        .setDeveloperKey(developerKey)
+                        .setCallback(pickerCallback)
+                        .setOrigin(window.location.protocol + '//' + window.location.host); // เพิ่มบรรทัดนี้เพื่อแก้ไขปัญหา API Developer Key is invalid
+
+                    // หากระบุว่าสามารถเลือกไฟล์ได้หลายไฟล์
+                    if (isMultipleSelection) {
+                        pickerBuilder.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
+                    }
+
+                    const picker = pickerBuilder.build();
+                    picker.setVisible(true);
                 }
             }
-        };
 
-        window.loadMembersFromFirebase = async function() {
-            try {
-                const tbody = document.getElementById('admin-members-tbody');
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
-                
-                const q = query(collection(db, "members"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                membersList = [];
-                querySnapshot.forEach((doc) => {
-                    membersList.push({ id: doc.id, ...doc.data() });
-                });
-                
-                document.getElementById('total-members').textContent = membersList.length;
-                tbody.innerHTML = '';
-                
-                if (membersList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">ยังไม่มีผู้ลงทะเบียน</td></tr>';
-                    return;
+            function pickerCallback(data) {
+                if (data.action == google.picker.Action.PICKED) {
+                    const targetElement = document.getElementById(currentTargetInputId);
+
+                    if (isMultipleSelection) {
+                        // ถ้าเลือกหลายรูป (Gallery)
+                        let currentUrls = targetElement.value ? targetElement.value.split('\n') : [];
+                        data.docs.forEach(doc => {
+                            const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
+                            if (!currentUrls.includes(url)) {
+                                currentUrls.push(url);
+                            }
+                        });
+                        targetElement.value = currentUrls.join('\n');
+                    } else {
+                        // ถ้าเลือกรูปเดียว (Cover, Committee)
+                        const doc = data.docs[0];
+                        const url = `https://drive.google.com/uc?export=view&id=${doc.id}`;
+                        targetElement.value = url;
+                    }
                 }
-                
-                membersList.forEach((m, index) => {
-                    const row = document.createElement('tr');
-                    const dateTime = formatDateTimeFromFirestore(m.timestamp);
-                    const statusSelect = `
+            }
+            window.updateEditRooms = function (selectedRoom = null) {
+                const grade = document.getElementById('edit-member-grade').value;
+                const roomSelect = document.getElementById('edit-member-room');
+
+                roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+
+                let maxRooms = 0;
+                if (['ม.1', 'ม.2', 'ม.3'].includes(grade)) {
+                    maxRooms = 15;
+                } else if (['ม.4', 'ม.5', 'ม.6'].includes(grade)) {
+                    maxRooms = 16;
+                }
+
+                for (let i = 1; i <= maxRooms; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `ห้อง ${i}`;
+                    if (selectedRoom && String(i) === String(selectedRoom)) {
+                        option.selected = true;
+                    }
+                    roomSelect.appendChild(option);
+                }
+            };
+
+            // --- MEMBERS MANAGEMENT ---
+            let membersList = [];
+            window.openEditMemberModal = function (id) {
+                const member = membersList.find(m => m.id === id);
+                if (member) {
+                    window.currentEditMemberId = id;
+                    document.getElementById('edit-member-fullname').value = member.fullname || '';
+                    document.getElementById('edit-member-studentId').value = member.studentId || '';
+                    document.getElementById('edit-member-memberId').value = member.member_id || '';
+                    document.getElementById('edit-member-gender').value = member.gender || 'ชาย';
+
+                    // แยกค่า ม.X/Y
+                    let gradeVal = 'ม.1';
+                    let roomVal = '1';
+                    if (member.grade && member.grade.includes('/')) {
+                        const parts = member.grade.split('/');
+                        gradeVal = parts[0];
+                        roomVal = parts[1];
+                    } else if (member.grade) {
+                        gradeVal = member.grade;
+                    }
+
+                    document.getElementById('edit-member-grade').value = gradeVal;
+                    window.updateEditRooms(roomVal);
+
+                    document.getElementById('edit-member-motivation').value = member.motivation || '';
+                    document.getElementById('member-modal').classList.add('active');
+                }
+            };
+
+            window.suggestId = async function (isSpecial) {
+                const btn = event.currentTarget;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+
+                try {
+                    const q = query(collection(db, "members"), orderBy("member_id", "desc"));
+                    const snap = await getDocs(q);
+
+                    let nextId = isSpecial ? 880 : 1;
+                    if (!snap.empty) {
+                        const existingIds = snap.docs
+                            .map(doc => doc.data().member_id)
+                            .filter(id => id && id.startsWith('CZ-'))
+                            .map(id => parseInt(id.replace('CZ-', '')))
+                            .filter(num => !isNaN(num));
+
+                        if (existingIds.length > 0) {
+                            if (isSpecial) {
+                                const specialIds = existingIds.filter(num => num >= 880 && num <= 999);
+                                if (specialIds.length > 0) nextId = Math.max(...specialIds) + 1;
+                                if (nextId > 999) alert('หมวดพิเศษเต็มแล้ว (880-999)');
+                            } else {
+                                const normalIds = existingIds.filter(num => num <= 879);
+                                if (normalIds.length > 0) nextId = Math.max(...normalIds) + 1;
+                                if (nextId > 879) alert('หมวดปกติเต็มแล้ว (001-879)');
+                            }
+                        }
+                    }
+                    document.getElementById('edit-member-memberId').value = `CZ-${String(nextId).padStart(3, '0')}`;
+                } catch (err) {
+                    console.error(err);
+                    alert('ไม่สามารถดึงรหัสถัดไปได้');
+                } finally {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            };
+
+            window.closeMemberModal = function () {
+                document.getElementById('member-modal').classList.remove('active');
+                window.currentEditMemberId = null;
+            };
+
+            document.getElementById('edit-member-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+                btn.disabled = true;
+                try {
+                    const memberRef = doc(db, "members", window.currentEditMemberId);
+                    const grade = document.getElementById('edit-member-grade').value;
+                    const room = document.getElementById('edit-member-room').value;
+                    const fullGrade = `${grade}/${room}`;
+                    let newMemberId = document.getElementById('edit-member-memberId').value.trim().toUpperCase();
+
+                    // Auto-prefix if only numbers entered (e.g. "901" -> "CZ-901")
+                    if (/^\d{1,3}$/.test(newMemberId)) {
+                        newMemberId = 'CZ-' + newMemberId.padStart(3, '0');
+                    }
+
+                    // Check for duplicate Member ID (Globally)
+                    if (newMemberId) {
+                        const q = query(collection(db, "members"), where("member_id", "==", newMemberId));
+                        const duplicateSnap = await getDocs(q);
+                        let isDuplicate = false;
+                        duplicateSnap.forEach(d => {
+                            if (d.id !== window.currentEditMemberId) isDuplicate = true;
+                        });
+
+                        if (isDuplicate) {
+                            alert(`รหัส ${newMemberId} มีผู้ใช้งานแล้ว กรุณาใช้รหัสอื่น`);
+                            btn.innerHTML = 'บันทึกการเปลี่ยนแปลง';
+                            btn.disabled = false;
+                            return;
+                        }
+                    }
+
+                    await updateDoc(memberRef, {
+                        fullname: document.getElementById('edit-member-fullname').value,
+                        studentId: document.getElementById('edit-member-studentId').value,
+                        member_id: newMemberId,
+                        gender: document.getElementById('edit-member-gender').value,
+                        grade: fullGrade,
+                        motivation: document.getElementById('edit-member-motivation').value
+                    });
+                    alert('แก้ไขข้อมูลสำเร็จ');
+                    window.closeMemberModal();
+                    window.loadMembersFromFirebase();
+                } catch (err) {
+                    console.error("Error", err);
+                    alert('เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
+                } finally {
+                    btn.innerHTML = 'บันทึกการเปลี่ยนแปลง';
+                    btn.disabled = false;
+                }
+            });
+
+            window.deleteMember = async function (id) {
+                if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกท่านนี้?')) {
+                    try {
+                        await deleteDoc(doc(db, "members", id));
+                        alert('ลบข้อมูลสำเร็จ');
+                        window.loadMembersFromFirebase();
+                    } catch (error) {
+                        console.error("Error", error);
+                        alert('เกิดข้อผิดพลาด');
+                    }
+                }
+            };
+
+            window.loadApprovedMembers = async function () {
+                try {
+                    const tbody = document.getElementById('admin-approved-members-tbody');
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+
+                    const q = query(collection(db, "members"), orderBy("timestamp", "asc"));
+                    const querySnapshot = await getDocs(q);
+
+                    const approvedList = [];
+                    querySnapshot.forEach((doc) => {
+                        const d = doc.data();
+                        if (!d.status || d.status === 'approved') {
+                            approvedList.push({ id: doc.id, ...d });
+                        }
+                    });
+
+                    // เรียงตามเลขสมาชิก CZ-xxx
+                    approvedList.sort((a, b) => {
+                        const idA = a.member_id ? parseInt(a.member_id.replace('CZ-', '')) : 999;
+                        const idB = b.member_id ? parseInt(b.member_id.replace('CZ-', '')) : 999;
+                        return idA - idB;
+                    });
+
+                    tbody.innerHTML = '';
+
+                    if (approvedList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีสมาชิกที่ผ่านการอนุมัติ</td></tr>';
+                        return;
+                    }
+
+                    approvedList.forEach((m, index) => {
+                        const row = document.createElement('tr');
+                        const dateTime = formatDateTimeFromFirestore(m.timestamp);
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td style="font-weight:bold; color:var(--primary);">${m.member_id || '-'}</td>
+                            <td>${m.studentId || '-'}</td>
+                            <td>${m.fullname || '-'}</td>
+                            <td>${m.gender || '-'}</td>
+                            <td>${m.grade || '-'}</td>
+                            <td>${dateTime}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error("Error", error);
+                    document.getElementById('admin-approved-members-tbody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+                }
+            };
+
+            window.loadMembersFromFirebase = async function () {
+                try {
+                    const tbody = document.getElementById('admin-members-tbody');
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+
+                    const q = query(collection(db, "members"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
+
+                    membersList = [];
+                    querySnapshot.forEach((doc) => {
+                        membersList.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    document.getElementById('total-members').textContent = membersList.length;
+                    tbody.innerHTML = '';
+
+                    if (membersList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">ยังไม่มีผู้ลงทะเบียน</td></tr>';
+                        return;
+                    }
+
+                    membersList.forEach((m, index) => {
+                        const row = document.createElement('tr');
+                        const dateTime = formatDateTimeFromFirestore(m.timestamp);
+                        const statusSelect = `
                         <select onchange="updateMemberStatus('${m.id}', this.value)" 
                             style="padding: 6px; border-radius: 4px; border: 1px solid #ddd; outline: none; cursor: pointer; background: ${m.status === 'approved' ? '#e8f8f5' : (m.status === 'rejected' ? '#fdedec' : '#fef9e7')}; color: ${m.status === 'approved' ? '#27ae60' : (m.status === 'rejected' ? '#c0392b' : '#f39c12')}; font-family: inherit; font-weight: bold;">
                             <option value="pending" ${m.status === 'pending' || !m.status ? 'selected' : ''} style="color: #f39c12;">รอดำเนินการ</option>
-                            <option value="approved" ${m.status === 'approved' ? 'selected' : ''} style="color: #27ae60;">อนุมัติ</option>
+                            <option value="approved_normal" ${m.status === 'approved' && (!m.member_id || (parseInt(m.member_id.replace('CZ-', '')) <= 879)) ? 'selected' : ''} style="color: #27ae60;">อนุมัติ (ปกติ)</option>
+                            <option value="approved_special" ${m.status === 'approved' && (m.member_id && parseInt(m.member_id.replace('CZ-', '')) >= 880) ? 'selected' : ''} style="color: #27ae60;">อนุมัติ (พิเศษ)</option>
                             <option value="rejected" ${m.status === 'rejected' ? 'selected' : ''} style="color: #c0392b;">ไม่อนุมัติ</option>
                         </select>
                     `;
-                    row.innerHTML = `
+                        row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${m.studentId || '-'}</td>
+                        <td style="font-weight:bold; color:var(--primary);">${m.member_id || '-'}</td>
                         <td>${m.fullname || '-'}</td>
                         <td>${m.gender || '-'}</td>
                         <td>${m.grade || '-'}</td>
@@ -1135,151 +1385,196 @@
                             </button>
                         </td>
                     `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error", error);
-                document.getElementById('admin-members-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-            }
-        };
-
-        window.updateMemberStatus = async function(id, status) {
-            try {
-                const memberRef = doc(db, "members", id);
-                await updateDoc(memberRef, { status: status });
-                window.loadMembersFromFirebase(); // Reload to reflect colors
-            } catch (error) {
-                console.error("Error updating status: ", error);
-                alert("เกิดข้อผิดพลาดในการเปลี่ยนสถานะ");
-                window.loadMembersFromFirebase();
-            }
-        };
-
-
-        // --- ACTIVITIES MANAGEMENT ---
-        let activitiesList = [];
-        window.openActivityModal = function() {
-            window.currentEditActivityId = null;
-            document.getElementById('add-activity-form').reset();
-            document.getElementById('activity-modal').classList.add('active');
-            document.querySelector('#activity-modal h2').textContent = 'เพิ่มกิจกรรมใหม่';
-        };
-
-        window.openEditActivityModal = function(id) {
-            const act = activitiesList.find(a => a.id === id);
-            if(act) {
-                window.currentEditActivityId = id;
-                document.getElementById('act-title').value = act.title || '';
-                document.getElementById('act-date').value = act.date || '';
-                document.getElementById('act-image').value = act.image || '';
-                document.getElementById('act-desc').value = act.description || '';
-                document.getElementById('act-content').value = act.content || '';
-                document.getElementById('act-gallery-urls').value = act.gallery ? act.gallery.join('\n') : '';
-                document.getElementById('act-status').value = act.status || 'show';
-                document.getElementById('activity-modal').classList.add('active');
-                document.querySelector('#activity-modal h2').textContent = 'แก้ไขกิจกรรม';
-            }
-        };
-
-        window.closeActivityModal = function() {
-            document.getElementById('activity-modal').classList.remove('active');
-            window.currentEditActivityId = null;
-        };
-
-        document.getElementById('add-activity-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button[type="submit"]');
-
-            const urlInput = document.getElementById('act-image').value;
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
-            btn.disabled = true;
-
-            try {
-                let imageUrl = urlInput;
-                const galleryText = document.getElementById('act-gallery-urls').value;
-                const galleryUrls = galleryText ? galleryText.split('\n').map(u => u.trim()).filter(u => u !== '') : [];
-
-                if (window.currentEditActivityId) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดทข้อมูล...';
-                    const actRef = doc(db, "activities", window.currentEditActivityId);
-                    const updateData = {
-                        title: document.getElementById('act-title').value,
-                        date: document.getElementById('act-date').value,
-                        image: imageUrl,
-                        description: document.getElementById('act-desc').value,
-                        content: document.getElementById('act-content').value,
-                        gallery: galleryUrls,
-                        status: document.getElementById('act-status').value
-                    };
-                    await updateDoc(actRef, updateData);
-                    alert('แก้ไขกิจกรรมสำเร็จ!');
-                } else {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
-                    await addDoc(collection(db, "activities"), {
-                        title: document.getElementById('act-title').value,
-                        date: document.getElementById('act-date').value,
-                        image: imageUrl,
-                        gallery: galleryUrls,
-                        description: document.getElementById('act-desc').value,
-                        content: document.getElementById('act-content').value,
-                        status: document.getElementById('act-status').value,
-                        timestamp: serverTimestamp()
+                        tbody.appendChild(row);
                     });
-                    alert('เพิ่มกิจกรรมสำเร็จ!');
-                }
-                window.closeActivityModal();
-                window.loadActivitiesFromFirebase();
-            } catch (err) {
-                console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม');
-            } finally {
-                btn.innerHTML = 'บันทึกกิจกรรม';
-                btn.disabled = false;
-            }
-        });
-
-        window.deleteActivity = async function(id) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?')) {
-                try {
-                    await deleteDoc(doc(db, "activities", id));
-                    alert('ลบข้อมูลสำเร็จ');
-                    window.loadActivitiesFromFirebase();
-                } catch(error) {
+                } catch (error) {
                     console.error("Error", error);
-                    alert('เกิดข้อผิดพลาด');
+                    document.getElementById('admin-members-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
                 }
-            }
-        };
+            };
 
-        window.loadActivitiesFromFirebase = async function() {
-            try {
-                const tbody = document.getElementById('admin-activities-tbody');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
-                
-                const q = query(collection(db, "activities"), orderBy("date", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                activitiesList = [];
-                querySnapshot.forEach((doc) => {
-                    activitiesList.push({ id: doc.id, ...doc.data() });
-                });
-                
-                document.getElementById('total-activities').textContent = activitiesList.length;
-                tbody.innerHTML = '';
-                
-                if (activitiesList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกิจกรรม</td></tr>';
-                    return;
+            window.updateMemberStatus = async function (id, status) {
+                try {
+                    const memberRef = doc(db, "members", id);
+                    const member = membersList.find(m => m.id === id);
+
+                    let updateData = { status: status };
+
+                    // จัดการประเภทการอนุมัติ
+                    if (status === 'approved_normal' || status === 'approved_special') {
+                        const isSpecial = (status === 'approved_special');
+                        updateData.status = 'approved'; // บันทึกลง DB เป็น 'approved' ปกติ
+
+                        // ถ้ายังไม่มีรหัสสมาชิก ให้สร้างรหัสตามหมวด
+                        if (!member || !member.member_id) {
+                            const q = query(collection(db, "members"), orderBy("member_id", "desc"));
+                            const snap = await getDocs(q);
+
+                            let nextId = isSpecial ? 880 : 1;
+
+                            if (!snap.empty) {
+                                const existingIds = snap.docs
+                                    .map(doc => doc.data().member_id)
+                                    .filter(id => id && id.startsWith('CZ-'))
+                                    .map(id => parseInt(id.replace('CZ-', '')))
+                                    .filter(num => !isNaN(num));
+
+                                if (existingIds.length > 0) {
+                                    if (isSpecial) {
+                                        // หาเลขสูงสุดในหมวดพิเศษ (880-999)
+                                        const specialIds = existingIds.filter(num => num >= 880 && num <= 999);
+                                        if (specialIds.length > 0) {
+                                            nextId = Math.max(...specialIds) + 1;
+                                        }
+                                    } else {
+                                        // หาเลขสูงสุดในหมวดปกติ (001-879)
+                                        const normalIds = existingIds.filter(num => num <= 879);
+                                        if (normalIds.length > 0) {
+                                            nextId = Math.max(...normalIds) + 1;
+                                        }
+                                    }
+                                }
+                            }
+
+                            const formattedId = `CZ-${String(nextId).padStart(3, '0')}`;
+                            updateData.member_id = formattedId;
+                        }
+                    }
+
+                    await updateDoc(memberRef, updateData);
+                    window.loadMembersFromFirebase(); // Reload to reflect colors
+                } catch (error) {
+                    console.error("Error updating status: ", error);
+                    alert("เกิดข้อผิดพลาดในการเปลี่ยนสถานะ");
+                    window.loadMembersFromFirebase();
                 }
-                
-                activitiesList.forEach((act, index) => {
-                    const row = document.createElement('tr');
-                    const imgUrl = formatImageUrl(act.image);
-                    const formattedDate = act.date ? new Date(act.date).toLocaleDateString('th-TH') : '-';
-                    const statusText = act.status === 'hide' ? '<span style="color: #e74c3c;"><i class="fa-solid fa-eye-slash"></i> ซ่อนอยู่</span>' : '<span style="color: #2ecc71;"><i class="fa-solid fa-eye"></i> แสดงผล</span>';
-                    
-                    row.innerHTML = `
+            };
+
+
+            // --- ACTIVITIES MANAGEMENT ---
+            let activitiesList = [];
+            window.openActivityModal = function () {
+                window.currentEditActivityId = null;
+                document.getElementById('add-activity-form').reset();
+                document.getElementById('activity-modal').classList.add('active');
+                document.querySelector('#activity-modal h2').textContent = 'เพิ่มกิจกรรมใหม่';
+            };
+
+            window.openEditActivityModal = function (id) {
+                const act = activitiesList.find(a => a.id === id);
+                if (act) {
+                    window.currentEditActivityId = id;
+                    document.getElementById('act-title').value = act.title || '';
+                    document.getElementById('act-date').value = act.date || '';
+                    document.getElementById('act-image').value = act.image || '';
+                    document.getElementById('act-desc').value = act.description || '';
+                    document.getElementById('act-content').value = act.content || '';
+                    document.getElementById('act-gallery-urls').value = act.gallery ? act.gallery.join('\n') : '';
+                    document.getElementById('act-status').value = act.status || 'show';
+                    document.getElementById('activity-modal').classList.add('active');
+                    document.querySelector('#activity-modal h2').textContent = 'แก้ไขกิจกรรม';
+                }
+            };
+
+            window.closeActivityModal = function () {
+                document.getElementById('activity-modal').classList.remove('active');
+                window.currentEditActivityId = null;
+            };
+
+            document.getElementById('add-activity-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+
+                const urlInput = document.getElementById('act-image').value;
+
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+                btn.disabled = true;
+
+                try {
+                    let imageUrl = urlInput;
+                    const galleryText = document.getElementById('act-gallery-urls').value;
+                    const galleryUrls = galleryText ? galleryText.split('\n').map(u => u.trim()).filter(u => u !== '') : [];
+
+                    if (window.currentEditActivityId) {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดทข้อมูล...';
+                        const actRef = doc(db, "activities", window.currentEditActivityId);
+                        const updateData = {
+                            title: document.getElementById('act-title').value,
+                            date: document.getElementById('act-date').value,
+                            image: imageUrl,
+                            description: document.getElementById('act-desc').value,
+                            content: document.getElementById('act-content').value,
+                            gallery: galleryUrls,
+                            status: document.getElementById('act-status').value
+                        };
+                        await updateDoc(actRef, updateData);
+                        alert('แก้ไขกิจกรรมสำเร็จ!');
+                    } else {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+                        await addDoc(collection(db, "activities"), {
+                            title: document.getElementById('act-title').value,
+                            date: document.getElementById('act-date').value,
+                            image: imageUrl,
+                            gallery: galleryUrls,
+                            description: document.getElementById('act-desc').value,
+                            content: document.getElementById('act-content').value,
+                            status: document.getElementById('act-status').value,
+                            timestamp: serverTimestamp()
+                        });
+                        alert('เพิ่มกิจกรรมสำเร็จ!');
+                    }
+                    window.closeActivityModal();
+                    window.loadActivitiesFromFirebase();
+                } catch (err) {
+                    console.error("Error", err);
+                    alert('เกิดข้อผิดพลาดในการบันทึกกิจกรรม');
+                } finally {
+                    btn.innerHTML = 'บันทึกกิจกรรม';
+                    btn.disabled = false;
+                }
+            });
+
+            window.deleteActivity = async function (id) {
+                if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?')) {
+                    try {
+                        await deleteDoc(doc(db, "activities", id));
+                        alert('ลบข้อมูลสำเร็จ');
+                        window.loadActivitiesFromFirebase();
+                    } catch (error) {
+                        console.error("Error", error);
+                        alert('เกิดข้อผิดพลาด');
+                    }
+                }
+            };
+
+            window.loadActivitiesFromFirebase = async function () {
+                try {
+                    const tbody = document.getElementById('admin-activities-tbody');
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+
+                    const q = query(collection(db, "activities"), orderBy("date", "desc"));
+                    const querySnapshot = await getDocs(q);
+
+                    activitiesList = [];
+                    querySnapshot.forEach((doc) => {
+                        activitiesList.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    document.getElementById('total-activities').textContent = activitiesList.length;
+                    tbody.innerHTML = '';
+
+                    if (activitiesList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกิจกรรม</td></tr>';
+                        return;
+                    }
+
+                    activitiesList.forEach((act, index) => {
+                        const row = document.createElement('tr');
+                        const imgUrl = formatImageUrl(act.image);
+                        const formattedDate = act.date ? new Date(act.date).toLocaleDateString('th-TH') : '-';
+                        const statusText = act.status === 'hide' ? '<span style="color: #e74c3c;"><i class="fa-solid fa-eye-slash"></i> ซ่อนอยู่</span>' : '<span style="color: #2ecc71;"><i class="fa-solid fa-eye"></i> แสดงผล</span>';
+
+                        row.innerHTML = `
                         <td>${index + 1}</td>
                         <td><img src="${imgUrl}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
                         <td>${act.title || '-'}</td>
@@ -1295,138 +1590,138 @@
                             </button>
                         </td>
                     `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error", error);
-                document.getElementById('admin-activities-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-            }
-        };
-
-        // --- COMMITTEE MANAGEMENT ---
-        let committeeList = [];
-        window.openCommitteeModal = function() {
-            window.currentEditCommitteeId = null;
-            document.getElementById('add-committee-form').reset();
-            document.getElementById('com-order').value = 99;
-            document.getElementById('committee-modal').classList.add('active');
-            document.querySelector('#committee-modal-title').textContent = 'เพิ่มกรรมการใหม่';
-        };
-
-        window.openEditCommitteeModal = function(id) {
-            const com = committeeList.find(c => c.id === id);
-            if(com) {
-                window.currentEditCommitteeId = id;
-                document.getElementById('com-name').value = com.name || '';
-                document.getElementById('com-type').value = com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการบริหาร');
-                document.getElementById('com-position').value = com.position || '';
-                document.getElementById('com-grade').value = com.grade || '';
-                document.getElementById('com-order').value = com.order !== undefined ? com.order : 99;
-                document.getElementById('com-bio').value = com.bio || '';
-                document.getElementById('com-image').value = com.image || '';
-                document.getElementById('committee-modal').classList.add('active');
-                document.querySelector('#committee-modal-title').textContent = 'แก้ไขข้อมูลกรรมการ';
-            }
-        };
-
-        window.closeCommitteeModal = function() {
-            document.getElementById('committee-modal').classList.remove('active');
-            window.currentEditCommitteeId = null;
-        };
-
-        document.getElementById('add-committee-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button[type="submit"]');
-
-            const urlInput = document.getElementById('com-image').value;
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
-            btn.disabled = true;
-
-            try {
-                let imageUrl = urlInput;
-                let orderVal = parseInt(document.getElementById('com-order').value);
-                if (isNaN(orderVal)) orderVal = 99;
-
-                const comData = {
-                    name: document.getElementById('com-name').value,
-                    type: document.getElementById('com-type').value,
-                    position: document.getElementById('com-position').value,
-                    grade: document.getElementById('com-grade').value,
-                    order: orderVal,
-                    bio: document.getElementById('com-bio').value,
-                    image: imageUrl
-                };
-
-                if (window.currentEditCommitteeId) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดท...';
-                    const comRef = doc(db, "committee", window.currentEditCommitteeId);
-                    await updateDoc(comRef, comData);
-                    alert('แก้ไขข้อมูลสำเร็จ!');
-                } else {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
-                    comData.timestamp = serverTimestamp();
-                    await addDoc(collection(db, "committee"), comData);
-                    alert('เพิ่มกรรมการสำเร็จ!');
-                }
-                window.closeCommitteeModal();
-                window.loadCommitteeFromFirebase();
-            } catch (err) {
-                console.error("Error", err);
-                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-            } finally {
-                btn.innerHTML = 'บันทึกข้อมูล';
-                btn.disabled = false;
-            }
-        });
-
-        window.deleteCommittee = async function(id) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกรรมการนี้?')) {
-                try {
-                    await deleteDoc(doc(db, "committee", id));
-                    alert('ลบข้อมูลสำเร็จ');
-                    window.loadCommitteeFromFirebase();
-                } catch(error) {
+                        tbody.appendChild(row);
+                    });
+                } catch (error) {
                     console.error("Error", error);
-                    alert('เกิดข้อผิดพลาด');
+                    document.getElementById('admin-activities-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
                 }
-            }
-        };
+            };
 
-        window.loadCommitteeFromFirebase = async function() {
-            try {
-                const tbody = document.getElementById('admin-committee-tbody');
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
-                
-                const q = query(collection(db, "committee"), orderBy("timestamp", "asc"));
-                const querySnapshot = await getDocs(q);
-                
-                committeeList = [];
-                querySnapshot.forEach((doc) => {
-                    committeeList.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Sort array by order field
-                committeeList.sort((a, b) => {
-                    const orderA = a.order !== undefined ? a.order : 99;
-                    const orderB = b.order !== undefined ? b.order : 99;
-                    return orderA - orderB;
-                });
-                
-                document.getElementById('total-committee').textContent = committeeList.length;
-                tbody.innerHTML = '';
-                
-                if (committeeList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกรรมการ</td></tr>';
-                    return;
+            // --- COMMITTEE MANAGEMENT ---
+            let committeeList = [];
+            window.openCommitteeModal = function () {
+                window.currentEditCommitteeId = null;
+                document.getElementById('add-committee-form').reset();
+                document.getElementById('com-order').value = 99;
+                document.getElementById('committee-modal').classList.add('active');
+                document.querySelector('#committee-modal-title').textContent = 'เพิ่มกรรมการใหม่';
+            };
+
+            window.openEditCommitteeModal = function (id) {
+                const com = committeeList.find(c => c.id === id);
+                if (com) {
+                    window.currentEditCommitteeId = id;
+                    document.getElementById('com-name').value = com.name || '';
+                    document.getElementById('com-type').value = com.type || (com.position && com.position.includes('ที่ปรึกษา') ? 'คณะที่ปรึกษาชมรม' : 'คณะกรรมการบริหาร');
+                    document.getElementById('com-position').value = com.position || '';
+                    document.getElementById('com-grade').value = com.grade || '';
+                    document.getElementById('com-order').value = com.order !== undefined ? com.order : 99;
+                    document.getElementById('com-bio').value = com.bio || '';
+                    document.getElementById('com-image').value = com.image || '';
+                    document.getElementById('committee-modal').classList.add('active');
+                    document.querySelector('#committee-modal-title').textContent = 'แก้ไขข้อมูลกรรมการ';
                 }
-                
-                committeeList.forEach((com, index) => {
-                    const row = document.createElement('tr');
-                    const imgUrl = formatImageUrl(com.image);
-                    const comOrderDisplay = com.order !== undefined ? com.order : 99;
-                    
-                    row.innerHTML = `
+            };
+
+            window.closeCommitteeModal = function () {
+                document.getElementById('committee-modal').classList.remove('active');
+                window.currentEditCommitteeId = null;
+            };
+
+            document.getElementById('add-committee-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+
+                const urlInput = document.getElementById('com-image').value;
+
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+                btn.disabled = true;
+
+                try {
+                    let imageUrl = urlInput;
+                    let orderVal = parseInt(document.getElementById('com-order').value);
+                    if (isNaN(orderVal)) orderVal = 99;
+
+                    const comData = {
+                        name: document.getElementById('com-name').value,
+                        type: document.getElementById('com-type').value,
+                        position: document.getElementById('com-position').value,
+                        grade: document.getElementById('com-grade').value,
+                        order: orderVal,
+                        bio: document.getElementById('com-bio').value,
+                        image: imageUrl
+                    };
+
+                    if (window.currentEditCommitteeId) {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัพเดท...';
+                        const comRef = doc(db, "committee", window.currentEditCommitteeId);
+                        await updateDoc(comRef, comData);
+                        alert('แก้ไขข้อมูลสำเร็จ!');
+                    } else {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+                        comData.timestamp = serverTimestamp();
+                        await addDoc(collection(db, "committee"), comData);
+                        alert('เพิ่มกรรมการสำเร็จ!');
+                    }
+                    window.closeCommitteeModal();
+                    window.loadCommitteeFromFirebase();
+                } catch (err) {
+                    console.error("Error", err);
+                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                } finally {
+                    btn.innerHTML = 'บันทึกข้อมูล';
+                    btn.disabled = false;
+                }
+            });
+
+            window.deleteCommittee = async function (id) {
+                if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกรรมการนี้?')) {
+                    try {
+                        await deleteDoc(doc(db, "committee", id));
+                        alert('ลบข้อมูลสำเร็จ');
+                        window.loadCommitteeFromFirebase();
+                    } catch (error) {
+                        console.error("Error", error);
+                        alert('เกิดข้อผิดพลาด');
+                    }
+                }
+            };
+
+            window.loadCommitteeFromFirebase = async function () {
+                try {
+                    const tbody = document.getElementById('admin-committee-tbody');
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+
+                    const q = query(collection(db, "committee"), orderBy("timestamp", "asc"));
+                    const querySnapshot = await getDocs(q);
+
+                    committeeList = [];
+                    querySnapshot.forEach((doc) => {
+                        committeeList.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    // Sort array by order field
+                    committeeList.sort((a, b) => {
+                        const orderA = a.order !== undefined ? a.order : 99;
+                        const orderB = b.order !== undefined ? b.order : 99;
+                        return orderA - orderB;
+                    });
+
+                    document.getElementById('total-committee').textContent = committeeList.length;
+                    tbody.innerHTML = '';
+
+                    if (committeeList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลกรรมการ</td></tr>';
+                        return;
+                    }
+
+                    committeeList.forEach((com, index) => {
+                        const row = document.createElement('tr');
+                        const imgUrl = formatImageUrl(com.image);
+                        const comOrderDisplay = com.order !== undefined ? com.order : 99;
+
+                        row.innerHTML = `
                         <td>${comOrderDisplay}</td>
                         <td><img src="${imgUrl}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"></td>
                         <td>${com.name || '-'}</td>
@@ -1442,96 +1737,96 @@
                             </button>
                         </td>
                     `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error", error);
-                document.getElementById('admin-committee-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-            }
-        };
+                        tbody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error("Error", error);
+                    document.getElementById('admin-committee-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+                }
+            };
 
-        // Initialize Data on load (Disabled - now handled by logic below)
-        // window.loadMembersFromFirebase();
-        
-        // Show current date
-        const todayNow = new Date();
-        document.getElementById('current-date').textContent = todayNow.toLocaleDateString('th-TH', { 
-            year: 'numeric', month: 'long', day: 'numeric' 
-        });
+            // Initialize Data on load (Disabled - now handled by logic below)
+            // window.loadMembersFromFirebase();
 
-        // --- ADMINS MANAGEMENT ---
-        let adminsList = [];
-        window.openAdminManageModal = function() {
-            document.getElementById('admin-manage-form').reset();
-            document.getElementById('admin-manage-modal').classList.add('active');
-        };
+            // Show current date
+            const todayNow = new Date();
+            document.getElementById('current-date').textContent = todayNow.toLocaleDateString('th-TH', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
 
-        window.closeAdminManageModal = function() {
-            document.getElementById('admin-manage-modal').classList.remove('active');
-        };
+            // --- ADMINS MANAGEMENT ---
+            let adminsList = [];
+            window.openAdminManageModal = function () {
+                document.getElementById('admin-manage-form').reset();
+                document.getElementById('admin-manage-modal').classList.add('active');
+            };
 
-        document.getElementById('admin-manage-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            window.closeAdminManageModal = function () {
+                document.getElementById('admin-manage-modal').classList.remove('active');
+            };
 
-            try {
-                const adminData = {
-                    name: document.getElementById('admin-display-name').value,
-                    username: document.getElementById('admin-user-id').value,
-                    password: document.getElementById('admin-user-pwd').value,
-                    timestamp: serverTimestamp()
-                };
+            document.getElementById('admin-manage-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
 
-                await addDoc(collection(db, "admins"), adminData);
-                alert('เพิ่มแอดมินสำเร็จ!');
-                window.closeAdminManageModal();
-                window.loadAdminsFromFirebase();
-            } catch (err) {
-                console.error(err);
-                alert('เกิดข้อผิดพลาด');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'บันทึกข้อมูลแอดมิน';
-            }
-        });
-
-        window.deleteAdmin = async function(id) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบแอดมินนี้?')) {
                 try {
-                    await deleteDoc(doc(db, "admins", id));
-                    alert('ลบสำเร็จ');
+                    const adminData = {
+                        name: document.getElementById('admin-display-name').value,
+                        username: document.getElementById('admin-user-id').value,
+                        password: document.getElementById('admin-user-pwd').value,
+                        timestamp: serverTimestamp()
+                    };
+
+                    await addDoc(collection(db, "admins"), adminData);
+                    alert('เพิ่มแอดมินสำเร็จ!');
+                    window.closeAdminManageModal();
                     window.loadAdminsFromFirebase();
-                } catch(err) {
+                } catch (err) {
                     console.error(err);
                     alert('เกิดข้อผิดพลาด');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = 'บันทึกข้อมูลแอดมิน';
                 }
-            }
-        };
+            });
 
-        window.loadAdminsFromFirebase = async function() {
-            try {
-                const tbody = document.getElementById('admin-list-tbody');
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด...</td></tr>';
-                
-                const querySnapshot = await getDocs(collection(db, "admins"));
-                adminsList = [];
-                querySnapshot.forEach((doc) => {
-                    adminsList.push({ id: doc.id, ...doc.data() });
-                });
-
-                document.getElementById('total-admins').textContent = adminsList.length;
-                tbody.innerHTML = '';
-
-                if (adminsList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลแอดมิน (กรุณาเพิ่มแอดมินคนแรก)</td></tr>';
-                    return;
+            window.deleteAdmin = async function (id) {
+                if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบแอดมินนี้?')) {
+                    try {
+                        await deleteDoc(doc(db, "admins", id));
+                        alert('ลบสำเร็จ');
+                        window.loadAdminsFromFirebase();
+                    } catch (err) {
+                        console.error(err);
+                        alert('เกิดข้อผิดพลาด');
+                    }
                 }
+            };
 
-                adminsList.forEach(admin => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
+            window.loadAdminsFromFirebase = async function () {
+                try {
+                    const tbody = document.getElementById('admin-list-tbody');
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด...</td></tr>';
+
+                    const querySnapshot = await getDocs(collection(db, "admins"));
+                    adminsList = [];
+                    querySnapshot.forEach((doc) => {
+                        adminsList.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    document.getElementById('total-admins').textContent = adminsList.length;
+                    tbody.innerHTML = '';
+
+                    if (adminsList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">ยังไม่มีข้อมูลแอดมิน (กรุณาเพิ่มแอดมินคนแรก)</td></tr>';
+                        return;
+                    }
+
+                    adminsList.forEach(admin => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
                         <td>${admin.name}</td>
                         <td>${admin.username}</td>
                         <td>
@@ -1540,19 +1835,20 @@
                             </button>
                         </td>
                     `;
-                    tbody.appendChild(row);
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        };
+                        tbody.appendChild(row);
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            };
 
-        // Add Logout Function
-        window.logout = function() {
-            sessionStorage.removeItem('isAdminLoggedIn');
-            location.reload();
-        };
+            // Add Logout Function
+            window.logout = function () {
+                sessionStorage.removeItem('isAdminLoggedIn');
+                location.reload();
+            };
 
-    </script>
+        </script>
 </body>
+
 </html>
