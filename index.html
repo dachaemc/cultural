@@ -333,7 +333,7 @@
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // TODO: นำค่า Configuration ของ Firebase Project ของคุณมาใส่ที่นี่
         const firebaseConfig = {
@@ -504,18 +504,33 @@
                 const grade = document.getElementById('grade').value;
                 const motivation = document.getElementById('motivation').value;
 
-                // บันทึกข้อมูลลง Firestore ใน collection ที่ชื่อว่า "members"
+                // ตรวจสอบชื่อซ้ำ (Validation Security)
+                const qDuplicate = query(collection(db, "members"), where("fullname", "==", fullname));
+                const duplicateSnapshot = await getDocs(qDuplicate);
+                
+                if (!duplicateSnapshot.empty) {
+                    alertBox.style.display = 'block';
+                    alertBox.className = 'alert alert-danger';
+                    alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> มีชื่อ-นามสกุลนี้ในระบบแล้ว ไม่สามารถสมัครซ้ำได้';
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+                    return;
+                }
+
+                // บันทึกข้อมูลลง Firestore ใน collection ที่ชื่อว่า "members" โดยเพิ่มสถานะ
                 await addDoc(collection(db, "members"), {
                     fullname: fullname,
                     gender: gender,
                     grade: grade,
                     motivation: motivation,
+                    status: 'pending', // สถานะเริ่มต้นคือ รอดำเนินการ
                     timestamp: serverTimestamp()
                 });
 
                 alertBox.style.display = 'block';
                 alertBox.className = 'alert alert-success';
-                alertBox.innerHTML = '<i class="fa-solid fa-check-circle"></i> สมัครสมาชิกสำเร็จ!';
+                alertBox.innerHTML = '<i class="fa-solid fa-check-circle"></i> ส่งคำขอสมัครสำเร็จ! (กรุณารอแอดมินอนุมัติ)';
                 this.reset();
             } catch (error) {
                 console.error("Error adding document: ", error);
