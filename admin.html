@@ -406,12 +406,13 @@
                                 <th>ระดับชั้น</th>
                                 <th>เหตุผลที่อยากเข้า</th>
                                 <th>วันที่สมัคร</th>
+                                <th>สถานะการอนุมัติ</th>
                                 <th>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="admin-members-tbody">
                             <tr>
-                                <td colspan="7" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
+                                <td colspan="8" style="text-align: center; color: #666; padding: 20px;">กำลังโหลดข้อมูล...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1032,7 +1033,7 @@
         window.loadMembersFromFirebase = async function() {
             try {
                 const tbody = document.getElementById('admin-members-tbody');
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
                 
                 const q = query(collection(db, "members"), orderBy("timestamp", "desc"));
                 const querySnapshot = await getDocs(q);
@@ -1046,13 +1047,23 @@
                 tbody.innerHTML = '';
                 
                 if (membersList.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">ยังไม่มีผู้ลงทะเบียน</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">ยังไม่มีผู้ลงทะเบียน</td></tr>';
                     return;
                 }
                 
                 membersList.forEach((m, index) => {
                     const row = document.createElement('tr');
                     const dateTime = formatDateTimeFromFirestore(m.timestamp);
+                    const isFinalized = m.status === 'approved' || m.status === 'rejected';
+                    const statusSelect = `
+                        <select onchange="updateMemberStatus('${m.id}', this.value)" 
+                            ${isFinalized ? 'disabled' : ''} 
+                            style="padding: 6px; border-radius: 4px; border: 1px solid #ddd; outline: none; cursor: ${isFinalized ? 'not-allowed' : 'pointer'}; background: ${m.status === 'approved' ? '#e8f8f5' : (m.status === 'rejected' ? '#fdedec' : '#fef9e7')}; color: ${m.status === 'approved' ? '#27ae60' : (m.status === 'rejected' ? '#c0392b' : '#f39c12')}; font-family: inherit; font-weight: bold; opacity: ${isFinalized ? '0.8' : '1'};">
+                            <option value="pending" ${m.status === 'pending' || !m.status ? 'selected' : ''} style="color: #f39c12;">รอดำเนินการ</option>
+                            <option value="approved" ${m.status === 'approved' ? 'selected' : ''} style="color: #27ae60;">อนุมัติ</option>
+                            <option value="rejected" ${m.status === 'rejected' ? 'selected' : ''} style="color: #c0392b;">ไม่อนุมัติ</option>
+                        </select>
+                    `;
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${m.fullname || '-'}</td>
@@ -1060,6 +1071,7 @@
                         <td>${m.grade || '-'}</td>
                         <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${m.motivation || ''}">${m.motivation || '-'}</div></td>
                         <td>${dateTime}</td>
+                        <td>${statusSelect}</td>
                         <td>
                             <button class="btn-sm btn-primary-sm" onclick="openEditMemberModal('${m.id}')" title="แก้ไขข้อมูล">
                                 <i class="fa-solid fa-pen"></i> แก้ไข
@@ -1073,7 +1085,19 @@
                 });
             } catch (error) {
                 console.error("Error", error);
-                document.getElementById('admin-members-tbody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+                document.getElementById('admin-members-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+            }
+        };
+
+        window.updateMemberStatus = async function(id, status) {
+            try {
+                const memberRef = doc(db, "members", id);
+                await updateDoc(memberRef, { status: status });
+                window.loadMembersFromFirebase(); // Reload to reflect colors
+            } catch (error) {
+                console.error("Error updating status: ", error);
+                alert("เกิดข้อผิดพลาดในการเปลี่ยนสถานะ");
+                window.loadMembersFromFirebase();
             }
         };
 
