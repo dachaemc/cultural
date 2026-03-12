@@ -30,10 +30,12 @@
 
         .com-modal-content {
             background-color: var(--card-bg, #fff);
-            border-radius: 0; /* Full screen on mobile */
+            border-radius: 0;
+            /* Full screen on mobile */
             width: 100%;
             height: 100%;
-            max-width: 600px; /* Limit width on desktop but allow full height */
+            max-width: 600px;
+            /* Limit width on desktop but allow full height */
             position: relative;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -54,6 +56,7 @@
                 opacity: 0;
                 transform: translateY(100px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -122,7 +125,7 @@
             text-align: left;
             display: none;
             white-space: pre-wrap;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
         }
 
         .close-com-modal {
@@ -133,7 +136,7 @@
             font-size: 35px;
             cursor: pointer;
             z-index: 10;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
             width: 45px;
             height: 45px;
             display: flex;
@@ -145,7 +148,7 @@
 
         .close-com-modal:hover {
             color: #fff;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             transform: rotate(90deg);
         }
 
@@ -173,6 +176,8 @@
             <li><a href="#activities">กิจกรรม</a></li>
             <li><a href="#committee">กรรมการบริหาร</a></li>
             <li><a href="#register">สมัครสมาชิก</a></li>
+            <li><a href="member_login.html" style="color: #ffffff; font-weight: bold;"><i class="fa-solid fa-user"></i>
+                    ข้อมูลสมาชิก</a></li>
             <li><a href="admin.html" style="color: white; font-weight: bold;"><i class="fa-solid fa-user-shield"></i>
                     ผู้ดูแลระบบ</a></li>
         </ul>
@@ -182,7 +187,7 @@
     <header class="hero" id="home">
         <div class="hero-content">
             <h1>ชมรมรอยอดีต<br>จารีตปัจจุบัน</h1>
-            <p>เพื่อสืบสานและเผยแพร่วัฒนธรรม ประเพณี และศิลปะอันงดงามให้คงอยู่</p>
+            <p>โรงเรียนสุรวิทยาคาร ประเพณี และศิลปะอันงดงามให้คงอยู่</p>
             <a href="#register" class="btn-primary">สมัครสมาชิกชมรม <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </header>
@@ -197,7 +202,9 @@
 
     <!-- Committee Section -->
     <section id="committee" style="background:var(--card-bg);">
-        <h2 class="section-title">ที่ปรึกษาและคณะกรรมการบริหาร</h2>
+        <h2 class="section-title">ที่ปรึกษาและกรรมการบริหาร
+            <br>ชมรมรอยอดีต จารีตปัจจุบัน โรงเรียนสุรวิทยาคาร
+        </h2>
 
         <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">คณะที่ปรึกษาชมรม
         </h3>
@@ -206,7 +213,7 @@
         </div>
 
         <h3 style="text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px;">
-            คณะกรรมการบริหาร</h3>
+            กรรมการบริหาร</h3>
         <div class="committee-grid" id="committee-container">
             <p style="text-align: center; width: 100%; color: #666;">กำลังโหลดข้อมูลกรรมการ...</p>
         </div>
@@ -226,6 +233,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="studentId">เลขประจำตัวนักเรียน (5 หลัก)</label>
+                    <input type="text" id="studentId" name="studentId" class="form-control" required pattern="\d{5}"
+                        maxlength="5" placeholder="xxxxx" title="กรุณากรอกเลขประจำตัวนักเรียน 5 หลัก">
+                </div>
+
+                <div class="form-group">
                     <label>เพศ</label>
                     <div class="radio-group">
                         <label class="radio-option">
@@ -237,17 +250,26 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="grade">ระดับชั้น</label>
-                    <select id="grade" name="grade" class="form-control" required>
-                        <option value="">-- เลือกระดับชั้น --</option>
-                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
-                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
-                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
-                    </select>
+                <div class="form-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label for="grade">ระดับชั้น</label>
+                        <select id="grade" name="grade" class="form-control" required onchange="updateRooms()">
+                            <option value="">-- เลือกระดับชั้น --</option>
+                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                            <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                            <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                            <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label for="room">ห้อง</label>
+                        <select id="room" name="room" class="form-control" required disabled>
+                            <option value="">-- เลือกห้อง --</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -257,7 +279,6 @@
                 </div>
 
                 <button type="submit" class="btn-submit">ยืนยันการสมัครสมาชิก</button>
-                <a href="members_list.html" class="members-list-btn">ดูรายชื่อสมาชิกทั้งหมด</a>
             </form>
         </div>
     </section>
@@ -347,6 +368,36 @@
             // โหลดกิจกรรมและกรรมการย้ายไปไว้ใน <script type="module"> แทน 
         }
 
+        // Update Rooms based on Grade
+        window.updateRooms = function () {
+            const grade = document.getElementById('grade').value;
+            const roomSelect = document.getElementById('room');
+
+            roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+
+            if (!grade) {
+                roomSelect.disabled = true;
+                return;
+            }
+
+            roomSelect.disabled = false;
+            let maxRooms = 0;
+
+            // ม.1-3 มี 15 ห้อง, ม.4-6 มี 16 ห้อง
+            if (['ม.1', 'ม.2', 'ม.3'].includes(grade)) {
+                maxRooms = 15;
+            } else if (['ม.4', 'ม.5', 'ม.6'].includes(grade)) {
+                maxRooms = 16;
+            }
+
+            for (let i = 1; i <= maxRooms; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `ห้อง ${i}`;
+                roomSelect.appendChild(option);
+            }
+        };
+
         // Initialize
         loadData();
     </script>
@@ -388,7 +439,7 @@
                 let hasVisible = false;
                 querySnapshot.forEach((doc) => {
                     const act = { id: doc.id, ...doc.data() };
-                    
+
                     // Skip hidden activities
                     if (act.status === 'hide') return;
                     hasVisible = true;
@@ -521,14 +572,18 @@
 
             try {
                 const fullname = document.getElementById('fullname').value;
+                const studentId = document.getElementById('studentId').value;
                 const gender = document.querySelector('input[name="gender"]:checked').value;
                 const grade = document.getElementById('grade').value;
+                const room = document.getElementById('room').value;
                 const motivation = document.getElementById('motivation').value;
+
+                const fullGrade = `${grade}/${room}`;
 
                 // ตรวจสอบชื่อซ้ำ (Validation Security)
                 const qDuplicate = query(collection(db, "members"), where("fullname", "==", fullname));
                 const duplicateSnapshot = await getDocs(qDuplicate);
-                
+
                 if (!duplicateSnapshot.empty) {
                     alertBox.style.display = 'block';
                     alertBox.className = 'alert alert-danger';
@@ -542,8 +597,9 @@
                 // บันทึกข้อมูลลง Firestore ใน collection ที่ชื่อว่า "members" โดยเพิ่มสถานะ
                 await addDoc(collection(db, "members"), {
                     fullname: fullname,
+                    studentId: studentId,
                     gender: gender,
-                    grade: grade,
+                    grade: fullGrade,
                     motivation: motivation,
                     status: 'pending', // สถานะเริ่มต้นคือ รอดำเนินการ
                     timestamp: serverTimestamp()
@@ -553,6 +609,8 @@
                 alertBox.className = 'alert alert-success';
                 alertBox.innerHTML = '<i class="fa-solid fa-check-circle"></i> ส่งคำขอสมัครสำเร็จ! (กรุณารอแอดมินอนุมัติ)';
                 this.reset();
+                document.getElementById('room').disabled = true;
+                document.getElementById('room').innerHTML = '<option value="">-- เลือกห้อง --</option>';
             } catch (error) {
                 console.error("Error adding document: ", error);
                 alertBox.style.display = 'block';
