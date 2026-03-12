@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบสมาชิก | ชมรมรอยอดีต จารีตปัจจุบัน</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-section {
+            padding: 80px 20px;
+            min-height: 100vh;
+            background: #fff5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .profile-container {
+            display: none;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            margin: 80px auto;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .status-pending {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+
+        .status-approved {
+            background: #e8f8f5;
+            color: #27ae60;
+        }
+
+        .status-rejected {
+            background: #fdedec;
+            color: #c0392b;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-edit:hover {
+            opacity: 0.9;
+        }
+
+        #logout-btn {
+            background: #64748b;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <i class="fa-solid fa-dragon"></i> ชมรมรอยอดีต จารีตปัจจุบัน
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">กลับหน้าหลัก</a></li>
+        </ul>
+    </nav>
+
+    <!-- Login Section -->
+    <section id="login-form-section" class="login-section">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fa-solid fa-user-circle"></i>
+                <h2>เข้าสู่ระบบสมาชิก</h2>
+                <p>กรุณากรอกข้อมูลเพื่อเข้าดูโปรไฟล์ของคุณ</p>
+            </div>
+            <form id="member-login-form">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>ชื่อ - นามสกุล *</label>
+                    <input type="text" id="login-fullname" required class="form-control"
+                        placeholder="ชื่อ-นามสกุล ที่ใช้สมัคร">
+                </div>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label>เลขประจำตัวนักเรียน (5 หลัก) *</label>
+                    <input type="password" id="login-studentId" required class="form-control" maxlength="5"
+                        placeholder="xxxxx">
+                </div>
+                <button type="submit" class="btn-submit" style="width: 100%;">เข้าสู่ระบบ</button>
+                <div id="login-error" style="color: red; text-align: center; margin-top: 15px; display: none;">
+                    ไม่พบข้อมูลสมาชิก หรือข้อมูลไม่ถูกต้อง</div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile-section" class="profile-container">
+        <h2 style="text-align: center; margin-bottom: 10px;">ข้อมูลสมาชิก</h2>
+        <div style="text-align: center;">
+            <div id="display-status" class="status-badge"></div>
+        </div>
+
+        <form id="edit-profile-form">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>เลขประจำตัวนักเรียน</label>
+                <input type="text" id="display-id" class="form-control" disabled>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>ชื่อ - นามสกุล</label>
+                <input type="text" id="edit-fullname" class="form-control" required>
+            </div>
+            <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>เพศ</label>
+                    <select id="edit-gender" class="form-control" required>
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>ระดับชั้น/ห้อง</label>
+                    <input type="text" id="display-grade" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>เหตุผลที่อยากเข้าชมรม</label>
+                <textarea id="edit-motivation" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn-edit">บันทึกการแก้ไขข้อมูล</button>
+            <button type="button" id="logout-btn" class="btn-edit" onclick="logout()">ออกจากระบบ</button>
+        </form>
+    </section>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe8k8OwZ5lxVtOSa9Lt_ADQVCLp18Ldbs",
+            authDomain: "cultural-plaza.firebaseapp.com",
+            projectId: "cultural-plaza",
+            storageBucket: "cultural-plaza.firebasestorage.app",
+            messagingSenderId: "327844017948",
+            appId: "1:327844017948:web:605158835ff985ffdbecd9",
+            measurementId: "G-BM3TTLGPEK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentMemberId = null;
+
+        // Login Handler
+        document.getElementById('member-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullname = document.getElementById('login-fullname').value;
+            const studentId = document.getElementById('login-studentId').value;
+            const errorEl = document.getElementById('login-error');
+
+            errorEl.style.display = 'none';
+
+            try {
+                const q = query(collection(db, "members"),
+                    where("fullname", "==", fullname),
+                    where("studentId", "==", studentId));
+
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const memberDoc = querySnapshot.docs[0];
+                    showProfile(memberDoc.id, memberDoc.data());
+                } else {
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+            }
+        });
+
+        function showProfile(id, data) {
+            currentMemberId = id;
+            document.getElementById('login-form-section').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'block';
+
+            // Populate data
+            document.getElementById('display-id').value = data.studentId;
+            document.getElementById('edit-fullname').value = data.fullname;
+            document.getElementById('edit-gender').value = data.gender;
+            document.getElementById('display-grade').value = data.grade;
+            document.getElementById('edit-motivation').value = data.motivation;
+
+            // Status Badge
+            const statusBadge = document.getElementById('display-status');
+            const status = data.status || 'pending';
+            statusBadge.className = 'status-badge status-' + status;
+
+            const statusText = {
+                'pending': 'สถานะ: รอดำเนินการ (รอแอดมินอนุมัติ)',
+                'approved': 'สถานะ: อนุมัติแล้ว (คุณเป็นสมาชิกสมบูรณ์)',
+                'rejected': 'สถานะ: ไม่ผ่านการอนุมัติ'
+            };
+            statusBadge.textContent = statusText[status] || statusText['pending'];
+        }
+
+        // Edit Handler
+        document.getElementById('edit-profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentMemberId) return;
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'กำลังบันทึก...';
+
+            try {
+                const memberRef = doc(db, "members", currentMemberId);
+                await updateDoc(memberRef, {
+                    fullname: document.getElementById('edit-fullname').value,
+                    gender: document.getElementById('edit-gender').value,
+                    motivation: document.getElementById('edit-motivation').value
+                });
+                alert('แก้ไขข้อมูลส่วนตัวเรียบร้อยแล้ว');
+            } catch (err) {
+                console.error(err);
+                alert('ไม่สามารถแก้ไขข้อมูลได้');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'บันทึกการแก้ไขข้อมูล';
+            }
+        });
+
+        window.logout = () => {
+            location.reload();
+        };
+    </script>
+</body>
+
+</html>
