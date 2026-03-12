@@ -401,6 +401,7 @@
                         <thead>
                             <tr>
                                 <th>ลำดับ</th>
+                                <th>เลขประจำตัว</th>
                                 <th>ชื่อ - นามสกุล</th>
                                 <th>เพศ</th>
                                 <th>ระดับชั้น</th>
@@ -635,6 +636,10 @@
             <h2 style="margin-top:0;">แก้ไขข้อมูลสมาชิก</h2>
             <form id="edit-member-form">
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">เลขประจำตัวนักเรียน (5 หลัก) *</label>
+                    <input type="text" id="edit-member-studentId" required class="form-control" pattern="\d{5}" maxlength="5" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">ชื่อ - นามสกุล *</label>
                     <input type="text" id="edit-member-fullname" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
                 </div>
@@ -645,16 +650,24 @@
                         <option value="หญิง">หญิง</option>
                     </select>
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
-                    <select id="edit-member-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
-                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
-                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
-                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
-                    </select>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ระดับชั้น *</label>
+                        <select id="edit-member-grade" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;" onchange="updateEditRooms()">
+                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                            <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                            <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                            <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">ห้อง *</label>
+                        <select id="edit-member-room" required class="form-control" style="width: 100%; padding: 10px; box-sizing: border-box;">
+                            <option value="">-- เลือกห้อง --</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">เหตุผลที่อยากเข้าชมรม *</label>
@@ -972,7 +985,29 @@
                 }
             }
         }
-
+        window.updateEditRooms = function(selectedRoom = null) {
+            const grade = document.getElementById('edit-member-grade').value;
+            const roomSelect = document.getElementById('edit-member-room');
+            
+            roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+            
+            let maxRooms = 0;
+            if (['ม.1', 'ม.2', 'ม.3'].includes(grade)) {
+                maxRooms = 15;
+            } else if (['ม.4', 'ม.5', 'ม.6'].includes(grade)) {
+                maxRooms = 16;
+            }
+            
+            for (let i = 1; i <= maxRooms; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `ห้อง ${i}`;
+                if (selectedRoom && String(i) === String(selectedRoom)) {
+                    option.selected = true;
+                }
+                roomSelect.appendChild(option);
+            }
+        };
 
         // --- MEMBERS MANAGEMENT ---
         let membersList = [];
@@ -981,8 +1016,23 @@
             if(member) {
                 window.currentEditMemberId = id;
                 document.getElementById('edit-member-fullname').value = member.fullname || '';
+                document.getElementById('edit-member-studentId').value = member.studentId || '';
                 document.getElementById('edit-member-gender').value = member.gender || 'ชาย';
-                document.getElementById('edit-member-grade').value = member.grade || 'ม.1';
+                
+                // แยกค่า ม.X/Y
+                let gradeVal = 'ม.1';
+                let roomVal = '1';
+                if (member.grade && member.grade.includes('/')) {
+                    const parts = member.grade.split('/');
+                    gradeVal = parts[0];
+                    roomVal = parts[1];
+                } else if (member.grade) {
+                    gradeVal = member.grade;
+                }
+
+                document.getElementById('edit-member-grade').value = gradeVal;
+                window.updateEditRooms(roomVal);
+                
                 document.getElementById('edit-member-motivation').value = member.motivation || '';
                 document.getElementById('member-modal').classList.add('active');
             }
@@ -999,10 +1049,15 @@
             btn.disabled = true;
             try {
                 const memberRef = doc(db, "members", window.currentEditMemberId);
+                const grade = document.getElementById('edit-member-grade').value;
+                const room = document.getElementById('edit-member-room').value;
+                const fullGrade = `${grade}/${room}`;
+
                 await updateDoc(memberRef, {
                     fullname: document.getElementById('edit-member-fullname').value,
+                    studentId: document.getElementById('edit-member-studentId').value,
                     gender: document.getElementById('edit-member-gender').value,
-                    grade: document.getElementById('edit-member-grade').value,
+                    grade: fullGrade,
                     motivation: document.getElementById('edit-member-motivation').value
                 });
                 alert('แก้ไขข้อมูลสำเร็จ');
@@ -1054,11 +1109,9 @@
                 membersList.forEach((m, index) => {
                     const row = document.createElement('tr');
                     const dateTime = formatDateTimeFromFirestore(m.timestamp);
-                    const isFinalized = m.status === 'approved' || m.status === 'rejected';
                     const statusSelect = `
                         <select onchange="updateMemberStatus('${m.id}', this.value)" 
-                            ${isFinalized ? 'disabled' : ''} 
-                            style="padding: 6px; border-radius: 4px; border: 1px solid #ddd; outline: none; cursor: ${isFinalized ? 'not-allowed' : 'pointer'}; background: ${m.status === 'approved' ? '#e8f8f5' : (m.status === 'rejected' ? '#fdedec' : '#fef9e7')}; color: ${m.status === 'approved' ? '#27ae60' : (m.status === 'rejected' ? '#c0392b' : '#f39c12')}; font-family: inherit; font-weight: bold; opacity: ${isFinalized ? '0.8' : '1'};">
+                            style="padding: 6px; border-radius: 4px; border: 1px solid #ddd; outline: none; cursor: pointer; background: ${m.status === 'approved' ? '#e8f8f5' : (m.status === 'rejected' ? '#fdedec' : '#fef9e7')}; color: ${m.status === 'approved' ? '#27ae60' : (m.status === 'rejected' ? '#c0392b' : '#f39c12')}; font-family: inherit; font-weight: bold;">
                             <option value="pending" ${m.status === 'pending' || !m.status ? 'selected' : ''} style="color: #f39c12;">รอดำเนินการ</option>
                             <option value="approved" ${m.status === 'approved' ? 'selected' : ''} style="color: #27ae60;">อนุมัติ</option>
                             <option value="rejected" ${m.status === 'rejected' ? 'selected' : ''} style="color: #c0392b;">ไม่อนุมัติ</option>
@@ -1066,6 +1119,7 @@
                     `;
                     row.innerHTML = `
                         <td>${index + 1}</td>
+                        <td>${m.studentId || '-'}</td>
                         <td>${m.fullname || '-'}</td>
                         <td>${m.gender || '-'}</td>
                         <td>${m.grade || '-'}</td>
