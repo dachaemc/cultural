@@ -141,9 +141,15 @@
         </div>
 
         <form id="edit-profile-form">
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label>เลขประจำตัวนักเรียน</label>
-                <input type="text" id="display-id" class="form-control" disabled>
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>เลขประจำตัวนักเรียน</label>
+                    <input type="text" id="display-id" class="form-control" disabled>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>เลขประจำตัวสมาชิก</label>
+                    <input type="text" id="display-member-id" class="form-control" disabled style="font-weight:bold; color:var(--primary);">
+                </div>
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
                 <label>ชื่อ - นามสกุล</label>
@@ -225,6 +231,7 @@
 
             // Populate data
             document.getElementById('display-id').value = data.studentId;
+            document.getElementById('display-member-id').value = data.member_id || 'ยังไม่ได้รับรหัส';
             document.getElementById('edit-fullname').value = data.fullname;
             document.getElementById('edit-gender').value = data.gender;
             document.getElementById('display-grade').value = data.grade;
