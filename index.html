@@ -16,11 +16,12 @@
             left: 0;
             top: 0;
             width: 100%;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.8);
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            backdrop-filter: blur(5px);
+            padding: 0;
         }
 
         #com-details-modal.active {
@@ -29,21 +30,30 @@
 
         .com-modal-content {
             background-color: var(--card-bg, #fff);
-            border-radius: var(--radius-lg, 12px);
+            border-radius: 0; /* Full screen on mobile */
             width: 100%;
-            max-width: 400px;
+            height: 100%;
+            max-width: 600px; /* Limit width on desktop but allow full height */
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: modalFadeIn 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: modalSlideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
         }
 
-        @keyframes modalFadeIn {
+        @media (min-width: 601px) {
+            .com-modal-content {
+                height: 90vh;
+                border-radius: 20px;
+            }
+        }
+
+        @keyframes modalSlideUp {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(100px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -51,25 +61,27 @@
         }
 
         .com-modal-header {
-            height: 120px;
+            height: 200px;
             background: linear-gradient(135deg, var(--primary, #e74c3c), #c0392b);
             position: relative;
+            flex-shrink: 0;
         }
 
         .com-modal-body {
-            padding: 0 30px 40px;
+            padding: 0 40px 60px;
             text-align: center;
-            margin-top: -60px;
+            margin-top: -100px;
+            flex: 1;
         }
 
         .com-modal-img {
-            width: 120px;
-            height: 120px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            border: 4px solid #fff;
+            border: 6px solid #fff;
             object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
             background: #fff;
             position: relative;
             z-index: 2;
@@ -99,33 +111,42 @@
         }
 
         .com-modal-bio {
-            margin-top: 20px;
+            margin-top: 30px;
             background-color: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary, #e74c3c);
-            font-size: 0.95rem;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary, #e74c3c);
+            font-size: 1.05rem;
             color: #475569;
-            line-height: 1.6;
+            line-height: 1.8;
             text-align: left;
             display: none;
-            /* Hidden by default until populated */
             white-space: pre-wrap;
-            /* เพื่อให้ขึ้นบรรทัดใหม่ตามที่พิมพ์ใน Textarea */
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
         }
 
         .close-com-modal {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 25px;
+            right: 25px;
             color: white;
-            font-size: 28px;
+            font-size: 35px;
             cursor: pointer;
             z-index: 10;
+            background: rgba(0,0,0,0.2);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
         }
 
         .close-com-modal:hover {
-            color: #f1c40f;
+            color: #fff;
+            background: rgba(0,0,0,0.4);
+            transform: rotate(90deg);
         }
 
         /* Make user know they can click card */
