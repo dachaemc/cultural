@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายชื่อสมาชิก | ชมรมรอยอดีต จารึกปัจจุบัน โรงเรียนสุรวิทยาคาร</title>
+    <title>รายชื่อสมาชิก | ชมรมรอยอดีต จารีตปัจจุบัน โรงเรียนสุรวิทยาคาร</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -33,7 +33,7 @@
 <body style="background: #fff5f5;">
     <nav class="navbar">
         <a href="index.html" class="nav-logo">
-            <i class="fa-solid fa-dragon"></i> ชมรมรอยอดีต จารึกปัจจุบัน
+            <i class="fa-solid fa-dragon"></i> ชมรมรอยอดีต จารีตปัจจุบัน
         </a>
         <ul class="nav-links">
             <li><a href="index.html">กลับสู่หน้าหลัก</a></li>
@@ -72,7 +72,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; <span id="current-year"></span> ชมรมรอยอดีต จารึกปัจจุบัน โรงเรียนสุรวิทยาคาร</p>
+        <p>&copy; <span id="current-year"></span> ชมรมรอยอดีต จารีตปัจจุบัน โรงเรียนสุรวิทยาคาร</p>
     </footer>
 
     <script>
@@ -126,12 +126,16 @@
         async function loadMembersFromFirebase() {
             try {
                 // ดึงข้อมูลจาก Firestore
-                const q = query(collection(db, "members"), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "members"), orderBy("timestamp", "asc"));
                 const querySnapshot = await getDocs(q);
                 
                 const members = [];
                 querySnapshot.forEach((doc) => {
-                    members.push(doc.data());
+                    const m = doc.data();
+                    // แสดงเฉพาะคนที่ได้รับอนุมัติแล้ว หรือสมาชิกเก่าที่ไม่มีฟิลด์ status
+                    if (m.status === 'approved' || !m.status) {
+                        members.push(m);
+                    }
                 });
                 
                 document.getElementById('member-count').textContent = members.length;
